@@ -6,15 +6,30 @@ import {
   remove,
 } from "../controllers/skill.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
+import { validateBody } from "../middlewares/validate.js";
+import {
+  createSkillSchema,
+  updateSkillSchema,
+} from "../schemas/skill.schema.js";
 
 const router = Router();
 
-// Public
 router.get("/", get);
 
-// Admin only
-router.post("/", requireAuth, create);
-router.put("/:id", requireAuth, update);
+router.post(
+  "/",
+  requireAuth,
+  validateBody(createSkillSchema),
+  create,
+);
+
+router.put(
+  "/:id",
+  requireAuth,
+  validateBody(updateSkillSchema),
+  update,
+);
+
 router.delete("/:id", requireAuth, remove);
 
 export default router;

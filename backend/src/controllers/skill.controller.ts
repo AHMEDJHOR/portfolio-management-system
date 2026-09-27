@@ -17,25 +17,7 @@ export const get = async (_req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  const { name, category, level, icon } = req.body;
-
-  if (
-    typeof name !== "string" ||
-    typeof category !== "string" ||
-    typeof level !== "number"
-  ) {
-    throw new AppError(
-      "Name, category, and level are required",
-      400,
-    );
-  }
-
-  const skill = await createSkill({
-    name,
-    category,
-    level,
-    icon,
-  });
+  const skill = await createSkill(req.body);
 
   res.status(201).json({
     success: true,
@@ -45,27 +27,13 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const update = async (req: Request, res: Response) => {
-  const { name, category, level, icon } = req.body;
   const { id } = req.params;
 
-  if (
-    typeof id !== "string" ||
-    typeof name !== "string" ||
-    typeof category !== "string" ||
-    typeof level !== "number"
-  ) {
-    throw new AppError(
-      "Skill id, name, category, and level are required",
-      400,
-    );
+  if (typeof id !== "string") {
+    throw new AppError("Skill id is required", 400);
   }
 
-  const skill = await updateSkill(id, {
-    name,
-    category,
-    level,
-    icon,
-  });
+  const skill = await updateSkill(id, req.body);
 
   res.status(200).json({
     success: true,

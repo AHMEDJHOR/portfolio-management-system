@@ -48,62 +48,7 @@ export const getBySlug = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  const {
-    title,
-    slug,
-    description,
-    githubUrl,
-    liveUrl,
-    featured,
-    thumbnailId,
-    skillIds,
-  } = req.body;
-
-  if (
-    typeof title !== "string" ||
-    typeof slug !== "string" ||
-    typeof description !== "string"
-  ) {
-    throw new AppError(
-      "Title, slug, and description are required",
-      400,
-    );
-  }
-
-  if (githubUrl !== undefined && typeof githubUrl !== "string") {
-    throw new AppError("GitHub URL must be a string", 400);
-  }
-
-  if (liveUrl !== undefined && typeof liveUrl !== "string") {
-    throw new AppError("Live URL must be a string", 400);
-  }
-
-  if (featured !== undefined && typeof featured !== "boolean") {
-    throw new AppError("Featured must be a boolean", 400);
-  }
-
-  if (thumbnailId !== undefined && typeof thumbnailId !== "string") {
-    throw new AppError("Thumbnail ID must be a string", 400);
-  }
-
-  if (
-    skillIds !== undefined &&
-    (!Array.isArray(skillIds) ||
-      !skillIds.every((skillId) => typeof skillId === "string"))
-  ) {
-    throw new AppError("Skill IDs must be an array of strings", 400);
-  }
-
-  const project = await createProject({
-    title,
-    slug,
-    description,
-    githubUrl,
-    liveUrl,
-    featured,
-    thumbnailId,
-    skillIds,
-  });
+  const project = await createProject(req.body);
 
   res.status(201).json({
     success: true,
@@ -119,62 +64,7 @@ export const update = async (req: Request, res: Response) => {
     throw new AppError("Project ID is required", 400);
   }
 
-  const {
-    title,
-    slug,
-    description,
-    githubUrl,
-    liveUrl,
-    featured,
-    thumbnailId,
-    skillIds,
-  } = req.body;
-
-  if (
-    typeof title !== "string" ||
-    typeof slug !== "string" ||
-    typeof description !== "string"
-  ) {
-    throw new AppError(
-      "Title, slug, and description are required",
-      400,
-    );
-  }
-
-  if (githubUrl !== undefined && typeof githubUrl !== "string") {
-    throw new AppError("GitHub URL must be a string", 400);
-  }
-
-  if (liveUrl !== undefined && typeof liveUrl !== "string") {
-    throw new AppError("Live URL must be a string", 400);
-  }
-
-  if (featured !== undefined && typeof featured !== "boolean") {
-    throw new AppError("Featured must be a boolean", 400);
-  }
-
-  if (thumbnailId !== undefined && typeof thumbnailId !== "string") {
-    throw new AppError("Thumbnail ID must be a string", 400);
-  }
-
-  if (
-    skillIds !== undefined &&
-    (!Array.isArray(skillIds) ||
-      !skillIds.every((skillId) => typeof skillId === "string"))
-  ) {
-    throw new AppError("Skill IDs must be an array of strings", 400);
-  }
-
-  const project = await updateProject(id, {
-    title,
-    slug,
-    description,
-    githubUrl,
-    liveUrl,
-    featured,
-    thumbnailId,
-    skillIds,
-  });
+  const project = await updateProject(id, req.body);
 
   res.status(200).json({
     success: true,
