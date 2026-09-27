@@ -6,6 +6,7 @@ import skillRoutes from "./skill.routes.js";
 import projectRoutes from "./project.routes.js";
 import experienceRoutes from "./experience.routes.js";
 import educationRoutes from "./education.routes.js";
+import certificationRoutes from "./certification.routes.js";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/skills", skillRoutes);
 router.use("/projects", projectRoutes);
 router.use("/experiences", experienceRoutes);
 router.use("/education", educationRoutes);
+router.use("/certifications", certificationRoutes);
 
 export default router;
