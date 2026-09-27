@@ -9,6 +9,7 @@ import educationRoutes from "./education.routes.js";
 import certificationRoutes from "./certification.routes.js";
 import blogRoutes from "./blog.routes.js";
 import contactMessageRoutes from "./contact-message.routes.js";
+import mediaRoutes from "./media.routes.js";
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use("/education", educationRoutes);
 router.use("/certifications", certificationRoutes);
 router.use("/blogs", blogRoutes);
 router.use("/contact-messages", contactMessageRoutes);
+router.use("/media", mediaRoutes);
 
 export default router;
