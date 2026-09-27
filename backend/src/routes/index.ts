@@ -8,6 +8,7 @@ import experienceRoutes from "./experience.routes.js";
 import educationRoutes from "./education.routes.js";
 import certificationRoutes from "./certification.routes.js";
 import blogRoutes from "./blog.routes.js";
+import contactMessageRoutes from "./contact-message.routes.js";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use("/experiences", experienceRoutes);
 router.use("/education", educationRoutes);
 router.use("/certifications", certificationRoutes);
 router.use("/blogs", blogRoutes);
+router.use("/contact-messages", contactMessageRoutes);
 
 export default router;
