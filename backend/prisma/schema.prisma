@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  adminId   String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+model Profile {
+  id             String   @id @default(uuid()) @db.Uuid
+  fullName       String
+  title          String
+  bio            String
+  location       String?
+  email          String
+  phone          String?
+  githubUrl      String?
+  linkedinUrl    String?
+  telegramUrl    String?
+  resumeUrl      String?
+  profileImageId String?  @db.Uuid
+  profileImage   Media?   @relation("ProfileImage", fields: [profileImageId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Skill {
+  id        String              @id @default(uuid()) @db.Uuid
+  name      String              @unique
+  category  String
+  level     Int
+  icon      String?
+  projects  ProjectTechnology[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model Project {
+  id           String              @id @default(uuid()) @db.Uuid
+  title        String
+  slug         String              @unique
+  description  String
+  githubUrl    String?
+  liveUrl      String?
+  featured     Boolean             @default(false)
+  thumbnailId  String?             @db.Uuid
+  thumbnail    Media?              @relation("ProjectThumbnail", fields: [thumbnailId], references: [id])
+  technologies ProjectTechnology[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([slug])
+}
+
+model ProjectTechnology {
+  projectId String  @db.Uuid
+  skillId   String  @db.Uuid
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  skill     Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, skillId])
+}
+
+model Experience {
+  id          String    @id @default(uuid()) @db.Uuid
+  company     String
+  position    String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([startDate])
+}
+
+model Education {
+  id           String    @id @default(uuid()) @db.Uuid
+  institution  String
+  degree       String
+  fieldOfStudy String
+  startDate    DateTime
+  endDate      DateTime?
+  description  String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([startDate])
+}
+
+model Certification {
+  id            String   @id @default(uuid()) @db.Uuid
+  title         String
+  issuer        String
+  issueDate     DateTime
+  credentialUrl String?
+  imageId       String?  @db.Uuid
+  image         Media?   @relation("CertificationImage", fields: [imageId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  published   Boolean  @default(false)
+  thumbnailId String?  @db.Uuid
+  thumbnail   Media?   @relation("BlogThumbnail", fields: [thumbnailId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Media {
+  id        String        @id @default(uuid()) @db.Uuid
+  publicId  String?
+  url       String
+  altText   String?
+  mimeType  String
+  size      Int
+  provider  MediaProvider
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  profileImages       Profile[]       @relation("ProfileImage")
+  projectThumbnails   Project[]       @relation("ProjectThumbnail")
+  blogThumbnails      Blog[]          @relation("BlogThumbnail")
+  certificationImages Certification[] @relation("CertificationImage")
+}
+
+enum MediaProvider {
+  LOCAL
+  CLOUDINARY
+}
