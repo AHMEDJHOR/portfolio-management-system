@@ -1,10 +1,14 @@
+import path from "node:path";
 import express from "express";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
 import apiRoutes from "./routes/index.js";
 
 
+
 const app = express();
+
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.use(express.json());
 

@@ -1,5 +1,7 @@
 import { prisma } from "../config/prisma.js";
 import { AppError } from "../utils/AppError.js";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export const getMediaItems = async () => {
   return prisma.media.findMany({
@@ -66,6 +68,24 @@ export const deleteMedia = async (id: string) => {
 
   if (!existingMedia) {
     throw new AppError("Media not found", 404);
+  }
+
+  if (existingMedia.provider === "LOCAL") {
+    const filename = path.basename(existingMedia.url);
+    const filePath = path.resolve("uploads", filename);
+
+    try {
+      await fs.unlink(filePath);
+    } catch (error) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        error.code !== "ENOENT"
+      ) {
+        throw error;
+      }
+    }
   }
 
   await prisma.media.delete({

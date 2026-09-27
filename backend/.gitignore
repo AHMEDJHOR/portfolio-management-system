@@ -6,6 +6,7 @@ node_modules/
 .env.*
 !.env.example
 
+
 # Generated Prisma Client
 generated/prisma/
 
@@ -32,3 +33,5 @@ Thumbs.db
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea/
+
+uploads/

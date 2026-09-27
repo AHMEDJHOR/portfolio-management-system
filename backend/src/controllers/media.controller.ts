@@ -72,3 +72,23 @@ export const remove = async (req: Request, res: Response) => {
     message: "Media deleted successfully",
   });
 };
+
+export const upload = async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw new AppError("Image file is required", 400);
+  }
+
+  const media = await createMedia({
+    url: `/uploads/${req.file.filename}`,
+    altText: req.body.altText,
+    mimeType: req.file.mimetype,
+    size: req.file.size,
+    provider: "LOCAL",
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "Media uploaded successfully",
+    data: media,
+  });
+};
