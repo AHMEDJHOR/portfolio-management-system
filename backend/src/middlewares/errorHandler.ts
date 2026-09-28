@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 import multer from "multer";
 
+import logger from "../config/logger.js";
 import { AppError } from "../utils/AppError.js";
 
 export const errorHandler: ErrorRequestHandler = (
@@ -9,7 +10,7 @@ export const errorHandler: ErrorRequestHandler = (
   res,
   _next,
 ) => {
-  console.error(error);
+  logger.error({ err: error }, "Unhandled application error");
 
   if (error instanceof multer.MulterError) {
     res.status(400).json({
