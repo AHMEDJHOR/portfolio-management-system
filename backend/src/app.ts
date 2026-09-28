@@ -1,4 +1,5 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { env } from "./config/env.js";
 
@@ -15,7 +16,10 @@ import { notFound } from "./middlewares/notFound.js";
 import { apiRateLimiter } from "./middlewares/rateLimit.js";
 import apiRoutes from "./routes/index.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+const uploadDirectory = path.resolve(__dirname, "../uploads");
 
 const app = express();
 
@@ -42,7 +46,7 @@ app.use(
 
 app.use(helmet());
 
-app.use("/uploads", express.static(path.resolve("uploads")));
+app.use("/uploads", express.static(uploadDirectory));
 
 app.use(express.json({ limit: "1mb" }));
 
