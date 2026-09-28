@@ -2,6 +2,24 @@ import { prisma } from "../config/prisma.js";
 import { AppError } from "../utils/AppError.js";
 import fs from "node:fs/promises";
 import path from "node:path";
+import cloudinary from "../config/cloudinary.js";
+
+export const uploadToCloudinary = async (
+  filePath: string,
+): Promise<{
+  secureUrl: string;
+  publicId: string;
+}> => {
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder: "portfolio",
+    resource_type: "image",
+  });
+
+  return {
+    secureUrl: result.secure_url,
+    publicId: result.public_id,
+  };
+};
 
 export const getMediaItems = async () => {
   return prisma.media.findMany({
@@ -86,6 +104,12 @@ export const deleteMedia = async (id: string) => {
         throw error;
       }
     }
+  }
+
+  if (existingMedia.provider === "CLOUDINARY" && existingMedia.publicId) {
+    await cloudinary.uploader.destroy(existingMedia.publicId, {
+      resource_type: "image",
+    });
   }
 
   await prisma.media.delete({

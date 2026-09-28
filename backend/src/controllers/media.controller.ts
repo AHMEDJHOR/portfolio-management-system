@@ -1,3 +1,5 @@
+import { uploadToCloudinary } from "../services/media.service.js";
+import fs from "node:fs/promises";
 import type { Request, Response } from "express";
 import {
   getMediaItems,
@@ -89,6 +91,34 @@ export const upload = async (req: Request, res: Response) => {
   res.status(201).json({
     success: true,
     message: "Media uploaded successfully",
+    data: media,
+  });
+};
+
+export const uploadCloudinary = async (
+  req: Request,
+  res: Response,
+) => {
+  if (!req.file) {
+    throw new AppError("Image file is required", 400);
+  }
+
+  const result = await uploadToCloudinary(req.file.path);
+
+  const media = await createMedia({
+    publicId: result.publicId,
+    url: result.secureUrl,
+    altText: req.body.altText,
+    mimeType: req.file.mimetype,
+    size: req.file.size,
+    provider: "CLOUDINARY",
+  });
+
+  await fs.unlink(req.file.path);
+
+  res.status(201).json({
+    success: true,
+    message: "Media uploaded to Cloudinary successfully",
     data: media,
   });
 };

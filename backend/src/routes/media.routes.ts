@@ -6,6 +6,7 @@ import {
   update,
   remove,
   upload,
+  uploadCloudinary,
 } from "../controllers/media.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 import { validateBody } from "../middlewares/validate.js";
@@ -24,6 +25,12 @@ router.post(
   requireAuth,
   uploadImage.single("file"),
   upload,
+);
+router.post(
+  "/upload/cloudinary",
+  requireAuth,
+  uploadImage.single("file"),
+  uploadCloudinary,
 );
 router.get("/:id", getById);
 
