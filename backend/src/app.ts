@@ -1,5 +1,7 @@
 import path from "node:path";
 
+import { env } from "./config/env.js";
+
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
@@ -33,7 +35,7 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env["CLIENT_URL"],
+    origin: env.clientUrl,
     credentials: true,
   }),
 );
