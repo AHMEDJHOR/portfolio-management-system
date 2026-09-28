@@ -11,10 +11,21 @@ const server = app.listen(env.port, () => {
 const shutdown = async (signal: string) => {
   logger.info(`${signal} received. Shutting down gracefully...`);
 
-  server.close(async () => {
-    await prisma.$disconnect();
-    logger.info("Server closed successfully.");
-    process.exit(0);
+  server.close(async (error) => {
+    if (error) {
+      logger.error({ err: error }, "Failed to close HTTP server");
+      process.exitCode = 1;
+      return;
+    }
+
+    try {
+      await prisma.$disconnect();
+      logger.info("Server closed successfully.");
+      process.exitCode = 0;
+    } catch (error) {
+      logger.error({ err: error }, "Failed to disconnect from database");
+      process.exitCode = 1;
+    }
   });
 };
 
