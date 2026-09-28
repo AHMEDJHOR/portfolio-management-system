@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "seed:admin": "tsx prisma/seed-admin.ts",
     "test": "echo \"No tests configured yet\" && exit 0",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma skills sync || exit 0",
+    "format": "prettier --write \"src/**/*.ts\"",
+"format:check": "prettier --check \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",
