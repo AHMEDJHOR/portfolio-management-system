@@ -103,22 +103,24 @@ export const uploadCloudinary = async (
     throw new AppError("Image file is required", 400);
   }
 
-  const result = await uploadToCloudinary(req.file.path);
+  try {
+    const result = await uploadToCloudinary(req.file.path);
 
-  const media = await createMedia({
-    publicId: result.publicId,
-    url: result.secureUrl,
-    altText: req.body.altText,
-    mimeType: req.file.mimetype,
-    size: req.file.size,
-    provider: "CLOUDINARY",
-  });
+    const media = await createMedia({
+      publicId: result.publicId,
+      url: result.secureUrl,
+      altText: req.body.altText,
+      mimeType: req.file.mimetype,
+      size: req.file.size,
+      provider: "CLOUDINARY",
+    });
 
-  await fs.unlink(req.file.path);
-
-  res.status(201).json({
-    success: true,
-    message: "Media uploaded to Cloudinary successfully",
-    data: media,
-  });
+    res.status(201).json({
+      success: true,
+      message: "Media uploaded to Cloudinary successfully",
+      data: media,
+    });
+  } finally {
+    await fs.unlink(req.file.path).catch(() => {});
+  }
 };
