@@ -4,8 +4,15 @@ import { env } from "./config/env.js";
 import { prisma } from "./config/prisma.js";
 import logger from "./config/logger.js";
 
-const server = app.listen(env.port, () => {
+const server = app.listen(env.port);
+
+server.on("listening", () => {
   logger.info(`Portfolio API running on http://localhost:${env.port}`);
+});
+
+server.on("error", (error) => {
+  logger.error({ err: error }, "Failed to start HTTP server");
+  process.exitCode = 1;
 });
 
 const shutdown = async (signal: string) => {
