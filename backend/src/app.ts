@@ -1,6 +1,9 @@
 import path from "node:path";
+
+import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
@@ -10,6 +13,13 @@ import apiRoutes from "./routes/index.js";
 
 
 const app = express();
+
+app.use(
+  cors({
+    origin: process.env["CLIENT_URL"],
+    credentials: true,
+  }),
+);
 
 app.use(helmet());
 
