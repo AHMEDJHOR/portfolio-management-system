@@ -3,7 +3,10 @@ import path from "node:path";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import pinoHttpModule from "pino-http";
+import logger from "./config/logger.js";
 
+const pinoHttp = pinoHttpModule.default ?? pinoHttpModule;
 
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
@@ -13,6 +16,20 @@ import apiRoutes from "./routes/index.js";
 
 
 const app = express();
+
+app.use(
+  pinoHttp({
+    logger,
+    redact: {
+      paths: [
+        "req.headers.authorization",
+        "req.headers.cookie",
+        "res.headers.set-cookie",
+      ],
+      censor: "[REDACTED]",
+    },
+  }),
+);
 
 app.use(
   cors({
