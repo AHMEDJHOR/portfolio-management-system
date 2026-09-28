@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getEducations = async () => {
   return prisma.education.findMany({
     orderBy: {
-      startDate: "desc",
+      startDate: 'desc',
     },
   });
 };
@@ -15,7 +15,7 @@ export const getEducationById = async (id: string) => {
   });
 
   if (!education) {
-    throw new AppError("Education not found", 404);
+    throw new AppError('Education not found', 404);
   }
 
   return education;
@@ -50,7 +50,7 @@ export const updateEducation = async (
   });
 
   if (!existingEducation) {
-    throw new AppError("Education not found", 404);
+    throw new AppError('Education not found', 404);
   }
 
   return prisma.education.update({
@@ -65,7 +65,7 @@ export const deleteEducation = async (id: string) => {
   });
 
   if (!existingEducation) {
-    throw new AppError("Education not found", 404);
+    throw new AppError('Education not found', 404);
   }
 
   await prisma.education.delete({

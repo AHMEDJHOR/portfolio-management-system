@@ -1,22 +1,24 @@
-import "dotenv/config";
-import { z } from "zod";
+import 'dotenv/config';
+import { z } from 'zod';
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: z
+    .enum(['development', 'test', 'production'])
+    .default('development'),
 
   PORT: z.coerce.number().int().positive().default(5000),
 
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
 
-  JWT_ACCESS_SECRET: z.string().min(1, "JWT_ACCESS_SECRET is required"),
+  JWT_ACCESS_SECRET: z.string().min(1, 'JWT_ACCESS_SECRET is required'),
 
-  JWT_REFRESH_SECRET: z.string().min(1, "JWT_REFRESH_SECRET is required"),
+  JWT_REFRESH_SECRET: z.string().min(1, 'JWT_REFRESH_SECRET is required'),
 
-  CLIENT_URL: z.string().url().default("http://localhost:5173"),
+  CLIENT_URL: z.string().url().default('http://localhost:5173'),
 
   LOG_LEVEL: z
-    .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
-    .default("info"),
+    .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
+    .default('info'),
 
   CLOUDINARY_CLOUD_NAME: z.string().optional(),
 
@@ -28,7 +30,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error("Invalid environment variables:", parsedEnv.error.format());
+  console.error('Invalid environment variables:', parsedEnv.error.format());
   process.exit(1);
 }
 

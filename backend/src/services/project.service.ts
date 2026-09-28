@@ -1,5 +1,5 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getProjects = async (featured?: boolean) => {
   return prisma.project.findMany({
@@ -15,7 +15,7 @@ export const getProjects = async (featured?: boolean) => {
       thumbnail: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 };
@@ -34,7 +34,7 @@ export const getProjectBySlug = async (slug: string) => {
   });
 
   if (!project) {
-    throw new AppError("Project not found", 404);
+    throw new AppError('Project not found', 404);
   }
 
   return project;
@@ -57,7 +57,7 @@ export const createProject = async (data: {
   });
 
   if (existingProject) {
-    throw new AppError("A project with this slug already exists", 409);
+    throw new AppError('A project with this slug already exists', 409);
   }
 
   if (data.skillIds?.length) {
@@ -73,7 +73,7 @@ export const createProject = async (data: {
     });
 
     if (skills.length !== new Set(data.skillIds).size) {
-      throw new AppError("One or more skills were not found", 400);
+      throw new AppError('One or more skills were not found', 400);
     }
   }
 
@@ -128,7 +128,7 @@ export const updateProject = async (
   });
 
   if (!existingProject) {
-    throw new AppError("Project not found", 404);
+    throw new AppError('Project not found', 404);
   }
 
   const duplicateProject = await prisma.project.findFirst({
@@ -141,7 +141,7 @@ export const updateProject = async (
   });
 
   if (duplicateProject) {
-    throw new AppError("A project with this slug already exists", 409);
+    throw new AppError('A project with this slug already exists', 409);
   }
 
   if (data.skillIds?.length) {
@@ -157,7 +157,7 @@ export const updateProject = async (
     });
 
     if (skills.length !== new Set(data.skillIds).size) {
-      throw new AppError("One or more skills were not found", 400);
+      throw new AppError('One or more skills were not found', 400);
     }
   }
 
@@ -215,7 +215,7 @@ export const deleteProject = async (id: string) => {
   });
 
   if (!existingProject) {
-    throw new AppError("Project not found", 404);
+    throw new AppError('Project not found', 404);
   }
 
   await prisma.project.delete({

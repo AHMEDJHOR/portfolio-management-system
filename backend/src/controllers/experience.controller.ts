@@ -1,12 +1,12 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 import {
   getExperiences,
   getExperienceById,
   createExperience,
   updateExperience,
   deleteExperience,
-} from "../services/experience.service.js";
-import { AppError } from "../utils/AppError.js";
+} from '../services/experience.service.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getAll = async (_req: Request, res: Response) => {
   const experiences = await getExperiences();
@@ -20,8 +20,8 @@ export const getAll = async (_req: Request, res: Response) => {
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Experience ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Experience ID is required', 400);
   }
 
   const experience = await getExperienceById(id);
@@ -37,7 +37,7 @@ export const create = async (req: Request, res: Response) => {
 
   res.status(201).json({
     success: true,
-    message: "Experience created successfully",
+    message: 'Experience created successfully',
     data: experience,
   });
 };
@@ -45,15 +45,15 @@ export const create = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Experience ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Experience ID is required', 400);
   }
 
   const experience = await updateExperience(id, req.body);
 
   res.status(200).json({
     success: true,
-    message: "Experience updated successfully",
+    message: 'Experience updated successfully',
     data: experience,
   });
 };
@@ -61,14 +61,14 @@ export const update = async (req: Request, res: Response) => {
 export const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Experience ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Experience ID is required', 400);
   }
 
   await deleteExperience(id);
 
   res.status(200).json({
     success: true,
-    message: "Experience deleted successfully",
+    message: 'Experience deleted successfully',
   });
 };

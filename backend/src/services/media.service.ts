@@ -1,8 +1,8 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
-import fs from "node:fs/promises";
-import path from "node:path";
-import cloudinary from "../config/cloudinary.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import cloudinary from '../config/cloudinary.js';
 
 export const uploadToCloudinary = async (
   filePath: string,
@@ -11,8 +11,8 @@ export const uploadToCloudinary = async (
   publicId: string;
 }> => {
   const result = await cloudinary.uploader.upload(filePath, {
-    folder: "portfolio",
-    resource_type: "image",
+    folder: 'portfolio',
+    resource_type: 'image',
   });
 
   return {
@@ -24,7 +24,7 @@ export const uploadToCloudinary = async (
 export const getMediaItems = async () => {
   return prisma.media.findMany({
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 };
@@ -35,7 +35,7 @@ export const getMediaById = async (id: string) => {
   });
 
   if (!media) {
-    throw new AppError("Media not found", 404);
+    throw new AppError('Media not found', 404);
   }
 
   return media;
@@ -47,7 +47,7 @@ export const createMedia = async (data: {
   altText?: string;
   mimeType: string;
   size: number;
-  provider: "LOCAL" | "CLOUDINARY";
+  provider: 'LOCAL' | 'CLOUDINARY';
 }) => {
   return prisma.media.create({
     data,
@@ -62,7 +62,7 @@ export const updateMedia = async (
     altText?: string;
     mimeType: string;
     size: number;
-    provider: "LOCAL" | "CLOUDINARY";
+    provider: 'LOCAL' | 'CLOUDINARY';
   },
 ) => {
   const existingMedia = await prisma.media.findUnique({
@@ -70,7 +70,7 @@ export const updateMedia = async (
   });
 
   if (!existingMedia) {
-    throw new AppError("Media not found", 404);
+    throw new AppError('Media not found', 404);
   }
 
   return prisma.media.update({
@@ -85,30 +85,30 @@ export const deleteMedia = async (id: string) => {
   });
 
   if (!existingMedia) {
-    throw new AppError("Media not found", 404);
+    throw new AppError('Media not found', 404);
   }
 
-  if (existingMedia.provider === "LOCAL") {
+  if (existingMedia.provider === 'LOCAL') {
     const filename = path.basename(existingMedia.url);
-    const filePath = path.resolve("uploads", filename);
+    const filePath = path.resolve('uploads', filename);
 
     try {
       await fs.unlink(filePath);
     } catch (error) {
       if (
-        typeof error === "object" &&
+        typeof error === 'object' &&
         error !== null &&
-        "code" in error &&
-        error.code !== "ENOENT"
+        'code' in error &&
+        error.code !== 'ENOENT'
       ) {
         throw error;
       }
     }
   }
 
-  if (existingMedia.provider === "CLOUDINARY" && existingMedia.publicId) {
+  if (existingMedia.provider === 'CLOUDINARY' && existingMedia.publicId) {
     await cloudinary.uploader.destroy(existingMedia.publicId, {
-      resource_type: "image",
+      resource_type: 'image',
     });
   }
 

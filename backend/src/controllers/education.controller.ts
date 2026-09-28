@@ -1,12 +1,12 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 import {
   getEducations,
   getEducationById,
   createEducation,
   updateEducation,
   deleteEducation,
-} from "../services/education.service.js";
-import { AppError } from "../utils/AppError.js";
+} from '../services/education.service.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getAll = async (_req: Request, res: Response) => {
   const educations = await getEducations();
@@ -20,8 +20,8 @@ export const getAll = async (_req: Request, res: Response) => {
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Education ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Education ID is required', 400);
   }
 
   const education = await getEducationById(id);
@@ -37,7 +37,7 @@ export const create = async (req: Request, res: Response) => {
 
   res.status(201).json({
     success: true,
-    message: "Education created successfully",
+    message: 'Education created successfully',
     data: education,
   });
 };
@@ -45,15 +45,15 @@ export const create = async (req: Request, res: Response) => {
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Education ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Education ID is required', 400);
   }
 
   const education = await updateEducation(id, req.body);
 
   res.status(200).json({
     success: true,
-    message: "Education updated successfully",
+    message: 'Education updated successfully',
     data: education,
   });
 };
@@ -61,14 +61,14 @@ export const update = async (req: Request, res: Response) => {
 export const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  if (typeof id !== "string") {
-    throw new AppError("Education ID is required", 400);
+  if (typeof id !== 'string') {
+    throw new AppError('Education ID is required', 400);
   }
 
   await deleteEducation(id);
 
   res.status(200).json({
     success: true,
-    message: "Education deleted successfully",
+    message: 'Education deleted successfully',
   });
 };

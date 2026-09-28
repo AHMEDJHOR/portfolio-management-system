@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getAll,
   getById,
@@ -7,48 +7,33 @@ import {
   remove,
   upload,
   uploadCloudinary,
-} from "../controllers/media.controller.js";
-import { requireAuth } from "../middlewares/auth.middleware.js";
-import { validateBody } from "../middlewares/validate.js";
+} from '../controllers/media.controller.js';
+import { requireAuth } from '../middlewares/auth.middleware.js';
+import { validateBody } from '../middlewares/validate.js';
 import {
   createMediaSchema,
   updateMediaSchema,
-} from "../schemas/media.schema.js";
-import { uploadImage } from "../middlewares/upload.middleware.js";
+} from '../schemas/media.schema.js';
+import { uploadImage } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
 // Public
-router.get("/", getAll);
+router.get('/', getAll);
+router.post('/upload', requireAuth, uploadImage.single('file'), upload);
 router.post(
-  "/upload",
+  '/upload/cloudinary',
   requireAuth,
-  uploadImage.single("file"),
-  upload,
-);
-router.post(
-  "/upload/cloudinary",
-  requireAuth,
-  uploadImage.single("file"),
+  uploadImage.single('file'),
   uploadCloudinary,
 );
-router.get("/:id", getById);
+router.get('/:id', getById);
 
 // Admin only
-router.post(
-  "/",
-  requireAuth,
-  validateBody(createMediaSchema),
-  create,
-);
+router.post('/', requireAuth, validateBody(createMediaSchema), create);
 
-router.put(
-  "/:id",
-  requireAuth,
-  validateBody(updateMediaSchema),
-  update,
-);
+router.put('/:id', requireAuth, validateBody(updateMediaSchema), update);
 
-router.delete("/:id", requireAuth, remove);
+router.delete('/:id', requireAuth, remove);
 
 export default router;

@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getSkills = async () => {
   return prisma.skill.findMany({
     orderBy: {
-      name: "asc",
+      name: 'asc',
     },
   });
 };
@@ -22,7 +22,7 @@ export const createSkill = async (data: {
   });
 
   if (existingSkill) {
-    throw new AppError("A skill with this name already exists", 409);
+    throw new AppError('A skill with this name already exists', 409);
   }
 
   return prisma.skill.create({
@@ -44,7 +44,7 @@ export const updateSkill = async (
   });
 
   if (!existingSkill) {
-    throw new AppError("Skill not found", 404);
+    throw new AppError('Skill not found', 404);
   }
 
   const duplicateSkill = await prisma.skill.findFirst({
@@ -57,7 +57,7 @@ export const updateSkill = async (
   });
 
   if (duplicateSkill) {
-    throw new AppError("A skill with this name already exists", 409);
+    throw new AppError('A skill with this name already exists', 409);
   }
 
   return prisma.skill.update({
@@ -72,7 +72,7 @@ export const deleteSkill = async (id: string) => {
   });
 
   if (!existingSkill) {
-    throw new AppError("Skill not found", 404);
+    throw new AppError('Skill not found', 404);
   }
 
   return prisma.skill.delete({

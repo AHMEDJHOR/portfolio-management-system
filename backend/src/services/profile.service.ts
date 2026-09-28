@@ -1,5 +1,5 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getProfile = async () => {
   return prisma.profile.findFirst({

@@ -1,8 +1,8 @@
-import multer from "multer";
-import path from "node:path";
-import crypto from "node:crypto";
+import multer from 'multer';
+import path from 'node:path';
+import crypto from 'node:crypto';
 
-const uploadDirectory = path.resolve(process.cwd(), "uploads");
+const uploadDirectory = path.resolve(process.cwd(), 'uploads');
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -17,17 +17,13 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter: multer.Options["fileFilter"] = (
-  _req,
-  file,
-  cb,
-) => {
-  if (file.mimetype.startsWith("image/")) {
+const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
     cb(null, true);
     return;
   }
 
-  cb(new Error("Only image files are allowed"));
+  cb(new Error('Only image files are allowed'));
 };
 
 export const uploadImage = multer({

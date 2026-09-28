@@ -1,6 +1,6 @@
-import type { RequestHandler } from "express";
-import type { ZodType } from "zod";
-import { AppError } from "../utils/AppError.js";
+import type { RequestHandler } from 'express';
+import type { ZodType } from 'zod';
+import { AppError } from '../utils/AppError.js';
 
 export const validateBody = (schema: ZodType): RequestHandler => {
   return (req, _res, next) => {
@@ -9,7 +9,7 @@ export const validateBody = (schema: ZodType): RequestHandler => {
     if (!result.success) {
       const message = result.error.issues
         .map((issue) => issue.message)
-        .join(", ");
+        .join(', ');
 
       next(new AppError(message, 400));
       return;

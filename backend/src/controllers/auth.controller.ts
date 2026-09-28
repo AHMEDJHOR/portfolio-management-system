@@ -1,11 +1,11 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 
 import {
   createAuthTokens,
   logout as logoutService,
   refreshAuthTokens,
   verifyAdminCredentials,
-} from "../services/auth.service.js";
+} from '../services/auth.service.js';
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -15,7 +15,7 @@ export const login = async (req: Request, res: Response) => {
 
   res.status(200).json({
     success: true,
-    message: "Login successful",
+    message: 'Login successful',
     data: {
       admin,
       ...tokens,
@@ -30,7 +30,7 @@ export const refresh = async (req: Request, res: Response) => {
 
   res.status(200).json({
     success: true,
-    message: "Token refreshed successfully",
+    message: 'Token refreshed successfully',
     data: tokens,
   });
 };

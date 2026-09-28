@@ -1,5 +1,5 @@
-import { v2 as cloudinary, ConfigOptions } from "cloudinary";
-import { env } from "./env.js";
+import { v2 as cloudinary, ConfigOptions } from 'cloudinary';
+import { env } from './env.js';
 
 cloudinary.config({
   cloud_name: env.cloudinaryCloudName,

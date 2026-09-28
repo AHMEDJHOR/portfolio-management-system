@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getContactMessages = async () => {
   return prisma.contactMessage.findMany({
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 };
@@ -15,7 +15,7 @@ export const getContactMessageById = async (id: string) => {
   });
 
   if (!contactMessage) {
-    throw new AppError("Contact message not found", 404);
+    throw new AppError('Contact message not found', 404);
   }
 
   return contactMessage;
@@ -43,7 +43,7 @@ export const updateContactMessage = async (
   });
 
   if (!existingMessage) {
-    throw new AppError("Contact message not found", 404);
+    throw new AppError('Contact message not found', 404);
   }
 
   return prisma.contactMessage.update({
@@ -58,7 +58,7 @@ export const deleteContactMessage = async (id: string) => {
   });
 
   if (!existingMessage) {
-    throw new AppError("Contact message not found", 404);
+    throw new AppError('Contact message not found', 404);
   }
 
   await prisma.contactMessage.delete({

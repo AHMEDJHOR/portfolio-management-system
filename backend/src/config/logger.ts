@@ -1,7 +1,7 @@
-import pino from "pino";
-import { env } from "./env.js";
+import pino from 'pino';
+import { env } from './env.js';
 
-const isProduction = env.nodeEnv === "production";
+const isProduction = env.nodeEnv === 'production';
 
 const logger = isProduction
   ? pino({
@@ -10,11 +10,11 @@ const logger = isProduction
   : pino({
       level: env.logLevel,
       transport: {
-        target: "pino-pretty",
+        target: 'pino-pretty',
         options: {
           colorize: true,
-          translateTime: "SYS:standard",
-          ignore: "pid,hostname",
+          translateTime: 'SYS:standard',
+          ignore: 'pid,hostname',
         },
       },
     });

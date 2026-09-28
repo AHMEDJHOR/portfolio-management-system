@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getCertifications = async () => {
   return prisma.certification.findMany({
     orderBy: {
-      issueDate: "desc",
+      issueDate: 'desc',
     },
   });
 };
@@ -15,7 +15,7 @@ export const getCertificationById = async (id: string) => {
   });
 
   if (!certification) {
-    throw new AppError("Certification not found", 404);
+    throw new AppError('Certification not found', 404);
   }
 
   return certification;
@@ -46,7 +46,7 @@ export const updateCertification = async (
   });
 
   if (!existingCertification) {
-    throw new AppError("Certification not found", 404);
+    throw new AppError('Certification not found', 404);
   }
 
   return prisma.certification.update({
@@ -61,7 +61,7 @@ export const deleteCertification = async (id: string) => {
   });
 
   if (!existingCertification) {
-    throw new AppError("Certification not found", 404);
+    throw new AppError('Certification not found', 404);
   }
 
   await prisma.certification.delete({

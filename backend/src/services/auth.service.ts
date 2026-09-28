@@ -1,23 +1,20 @@
-import { prisma } from "../config/prisma.js";
-import { hashPassword, comparePassword } from "../utils/password.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { hashPassword, comparePassword } from '../utils/password.js';
+import { AppError } from '../utils/AppError.js';
 import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from "../utils/jwt.js";
-import { hashRefreshToken } from "../utils/refreshToken.js";
+} from '../utils/jwt.js';
+import { hashRefreshToken } from '../utils/refreshToken.js';
 
-export const createAdmin = async (
-  email: string,
-  password: string,
-) => {
+export const createAdmin = async (email: string, password: string) => {
   const existingAdmin = await prisma.admin.findUnique({
     where: { email },
   });
 
   if (existingAdmin) {
-    throw new AppError("Admin account already exists", 409);
+    throw new AppError('Admin account already exists', 409);
   }
 
   const hashedPassword = await hashPassword(password);
@@ -47,16 +44,13 @@ export const verifyAdminCredentials = async (
   });
 
   if (!admin) {
-    throw new AppError("Invalid email or password", 401);
+    throw new AppError('Invalid email or password', 401);
   }
 
-  const passwordIsValid = await comparePassword(
-    password,
-    admin.password,
-  );
+  const passwordIsValid = await comparePassword(password, admin.password);
 
   if (!passwordIsValid) {
-    throw new AppError("Invalid email or password", 401);
+    throw new AppError('Invalid email or password', 401);
   }
 
   return {
@@ -71,9 +65,7 @@ export const createAuthTokens = async (adminId: string) => {
 
   const tokenHash = hashRefreshToken(refreshToken);
 
-  const expiresAt = new Date(
-    Date.now() + 7 * 24 * 60 * 60 * 1000,
-  );
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
   await prisma.refreshToken.create({
     data: {
@@ -99,19 +91,19 @@ export const refreshAuthTokens = async (refreshToken: string) => {
   });
 
   if (!storedToken) {
-    throw new AppError("Invalid refresh token", 401);
+    throw new AppError('Invalid refresh token', 401);
   }
 
   if (storedToken.revokedAt) {
-    throw new AppError("Refresh token has been revoked", 401);
+    throw new AppError('Refresh token has been revoked', 401);
   }
 
   if (storedToken.expiresAt <= new Date()) {
-    throw new AppError("Refresh token has expired", 401);
+    throw new AppError('Refresh token has expired', 401);
   }
 
   if (storedToken.adminId !== payload.adminId) {
-    throw new AppError("Invalid refresh token", 401);
+    throw new AppError('Invalid refresh token', 401);
   }
 
   await prisma.refreshToken.update({
@@ -135,6 +127,6 @@ export const logout = async (refreshToken: string) => {
 
   return {
     success: true,
-    message: "Logged out successfully",
+    message: 'Logged out successfully',
   };
 };

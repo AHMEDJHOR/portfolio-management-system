@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getExperiences = async () => {
   return prisma.experience.findMany({
     orderBy: {
-      startDate: "desc",
+      startDate: 'desc',
     },
   });
 };
@@ -15,7 +15,7 @@ export const getExperienceById = async (id: string) => {
   });
 
   if (!experience) {
-    throw new AppError("Experience not found", 404);
+    throw new AppError('Experience not found', 404);
   }
 
   return experience;
@@ -50,7 +50,7 @@ export const updateExperience = async (
   });
 
   if (!existingExperience) {
-    throw new AppError("Experience not found", 404);
+    throw new AppError('Experience not found', 404);
   }
 
   return prisma.experience.update({
@@ -65,7 +65,7 @@ export const deleteExperience = async (id: string) => {
   });
 
   if (!existingExperience) {
-    throw new AppError("Experience not found", 404);
+    throw new AppError('Experience not found', 404);
   }
 
   await prisma.experience.delete({

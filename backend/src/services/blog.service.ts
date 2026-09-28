@@ -1,10 +1,10 @@
-import { prisma } from "../config/prisma.js";
-import { AppError } from "../utils/AppError.js";
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 
 export const getBlogs = async () => {
   return prisma.blog.findMany({
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   });
 };
@@ -15,7 +15,7 @@ export const getBlogById = async (id: string) => {
   });
 
   if (!blog) {
-    throw new AppError("Blog not found", 404);
+    throw new AppError('Blog not found', 404);
   }
 
   return blog;
@@ -34,7 +34,7 @@ export const createBlog = async (data: {
   });
 
   if (existingBlog) {
-    throw new AppError("Blog slug already exists", 409);
+    throw new AppError('Blog slug already exists', 409);
   }
 
   return prisma.blog.create({
@@ -58,7 +58,7 @@ export const updateBlog = async (
   });
 
   if (!existingBlog) {
-    throw new AppError("Blog not found", 404);
+    throw new AppError('Blog not found', 404);
   }
 
   const existingSlug = await prisma.blog.findFirst({
@@ -71,7 +71,7 @@ export const updateBlog = async (
   });
 
   if (existingSlug) {
-    throw new AppError("Blog slug already exists", 409);
+    throw new AppError('Blog slug already exists', 409);
   }
 
   return prisma.blog.update({
@@ -86,7 +86,7 @@ export const deleteBlog = async (id: string) => {
   });
 
   if (!existingBlog) {
-    throw new AppError("Blog not found", 404);
+    throw new AppError('Blog not found', 404);
   }
 
   await prisma.blog.delete({

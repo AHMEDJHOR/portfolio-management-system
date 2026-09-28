@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { env } from "../config/env.js";
+import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 
 type AccessTokenPayload = {
   adminId: string;
@@ -10,7 +10,7 @@ export const generateAccessToken = (adminId: string): string => {
     { adminId } satisfies AccessTokenPayload,
     env.jwtAccessSecret,
     {
-      expiresIn: "15m",
+      expiresIn: '15m',
     },
   );
 };
@@ -20,7 +20,7 @@ export const generateRefreshToken = (adminId: string): string => {
     { adminId } satisfies AccessTokenPayload,
     env.jwtRefreshSecret,
     {
-      expiresIn: "7d",
+      expiresIn: '7d',
     },
   );
 };
