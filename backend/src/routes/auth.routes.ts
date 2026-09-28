@@ -7,6 +7,7 @@ import {
 } from "../controllers/auth.controller.js";
 import { requireAuth } from "../middlewares/auth.middleware.js";
 import { validateBody } from "../middlewares/validate.js";
+import { loginRateLimiter } from "../middlewares/rateLimit.js";
 import {
   loginSchema,
   refreshSchema,
@@ -17,6 +18,7 @@ const router = Router();
 
 router.post(
   "/login",
+  loginRateLimiter,
   validateBody(loginSchema),
   login,
 );
