@@ -25,7 +25,7 @@ app.use(helmet());
 
 app.use("/uploads", express.static(path.resolve("uploads")));
 
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 app.use("/api/v1", apiRateLimiter);
 app.use("/api/v1", apiRoutes);
