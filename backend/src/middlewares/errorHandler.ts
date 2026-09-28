@@ -1,4 +1,6 @@
 import type { ErrorRequestHandler } from "express";
+import multer from "multer";
+
 import { AppError } from "../utils/AppError.js";
 
 export const errorHandler: ErrorRequestHandler = (
@@ -9,8 +11,24 @@ export const errorHandler: ErrorRequestHandler = (
 ) => {
   console.error(error);
 
+  if (error instanceof multer.MulterError) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+    return;
+  }
+
   if (error instanceof AppError) {
     res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+    });
+    return;
+  }
+
+  if (error instanceof Error && error.message === "Only image files are allowed") {
+    res.status(400).json({
       success: false,
       message: error.message,
     });
