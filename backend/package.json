@@ -10,10 +10,10 @@
     "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit",
     "seed:admin": "tsx prisma/seed-admin.ts",
-    "test": "echo \"No tests configured yet\" && exit 0",
+    "test": "vitest run",
     "postinstall": "prisma skills sync || exit 0",
     "format": "prettier --write \"src/**/*.ts\"",
-"format:check": "prettier --check \"src/**/*.ts\""
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",
@@ -50,6 +50,7 @@
     "@types/pg": "^8.23.1",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
   }
 }
