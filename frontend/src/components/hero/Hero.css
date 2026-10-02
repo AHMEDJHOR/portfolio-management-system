@@ -1,0 +1,453 @@
+.hero {
+  /* Hero-only tuning knobs (not colors): atmospheric glow strength per theme. */
+  --hero-glow-primary: 18%;
+  --hero-glow-secondary: 10%;
+
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: calc(var(--header-height) + 2rem) 0 4.5rem;
+}
+
+:root[data-theme='light'] .hero {
+  --hero-glow-primary: 9%;
+  --hero-glow-secondary: 6%;
+}
+
+/* ---- Background: quiet grid + soft lighting ---- */
+
+.hero__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 70% 45%, #000, transparent 80%);
+  mask-image: radial-gradient(ellipse 75% 65% at 70% 45%, #000, transparent 80%);
+}
+
+.hero__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: -4%;
+  background:
+    radial-gradient(
+      38rem 30rem at 72% 44%,
+      color-mix(in srgb, var(--color-primary) var(--hero-glow-primary), transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      26rem 22rem at 95% 85%,
+      color-mix(in srgb, var(--color-secondary) var(--hero-glow-secondary), transparent),
+      transparent 70%
+    ),
+    /* Fades the Hero into whatever section follows. */
+    linear-gradient(to bottom, transparent 75%, var(--color-background));
+}
+
+/* ---- Layout ---- */
+
+.hero__inner {
+  display: grid;
+  gap: 2.5rem;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+
+/* ---- Content ---- */
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.75rem;
+  font-size: var(--label-sm-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.hero__status-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--color-tertiary);
+}
+
+.hero__status-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: inherit;
+  animation: hero-pulse 2.4s ease-out infinite;
+}
+
+@keyframes hero-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hero__name-line {
+  display: block;
+  font-size: clamp(3.25rem, 11vw, 7rem);
+  font-weight: var(--weight-semibold);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.hero__name-line + .hero__name-line {
+  margin-top: -1rem; /* cancels the flex gap so the two name lines stay tight */
+}
+
+.hero__role {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+}
+
+.hero__role::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background-color: var(--color-primary);
+}
+
+.hero__description {
+  max-width: 32rem;
+  font-size: var(--body-lg-size);
+  line-height: var(--body-lg-line);
+  color: var(--color-text-secondary);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.hero__button {
+  display: inline-flex;
+  flex: 1 1 10rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3rem;
+  padding-inline: 1.5rem;
+  font-size: var(--label-md-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.hero__button svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.hero__button--primary {
+  color: var(--color-on-primary);
+  background-color: var(--color-primary);
+}
+
+.hero__button--primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.hero__button--primary:hover svg {
+  transform: translateX(3px);
+}
+
+.hero__button--ghost {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-active);
+}
+
+.hero__button--ghost:hover {
+  background-color: var(--color-surface-elevated);
+}
+
+/* ---- Portrait stage ---- */
+
+.hero__stage {
+  position: relative;
+  width: min(78%, 18rem);
+  aspect-ratio: 4 / 5;
+  margin-inline: auto;
+}
+
+/* Orbital layer sits BEHIND the portrait (z-index 0 vs 1) and extends past it.
+   Swap the two z-index values if you want the rings to cross in front. */
+.hero__scene {
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  pointer-events: none;
+  /* Softens any ring that reaches the canvas edge. */
+  -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 72%, transparent 100%);
+}
+
+.hero__scene > div {
+  animation: hero-scene-in 1.4s ease-out both;
+}
+
+@keyframes hero-scene-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Front orbit layer: same box as .hero__scene, stacked above the portrait (z-index 1). */
+.hero__scene--front {
+  z-index: 2;
+}
+
+.hero__portrait {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+}
+
+/* Subtle technical corner marks instead of a frame. */
+.hero__portrait::before,
+.hero__portrait::after {
+  content: '';
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0 solid var(--color-border-active);
+}
+
+.hero__portrait::before {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.hero__portrait::after {
+  right: 0;
+  bottom: 0;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  /* Edges dissolve into the page: fade bottom and both sides, no hard rectangle. */
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 68%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, #000 68%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* ---- CSS fallback orbits: core → data/backend → engineering/production ---- */
+
+.hero__orbits-static {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__orbit {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  translate: -50% -50%;
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+  border-radius: 50%;
+}
+
+/* One node per ring, positioned with --dot-x / --dot-y (percent of the ring box). */
+.hero__orbit i {
+  position: absolute;
+  left: var(--dot-x);
+  top: var(--dot-y);
+  width: 0.4rem;
+  height: 0.4rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.hero__orbit--core {
+  --dot-x: 100%;
+  --dot-y: 50%;
+  width: 56%;
+  aspect-ratio: 1 / 0.42;
+  rotate: -8deg;
+  color: var(--color-primary);
+}
+
+.hero__orbit--data {
+  --dot-x: 14%;
+  --dot-y: 86%;
+  width: 76%;
+  aspect-ratio: 1 / 0.5;
+  rotate: 6deg;
+  color: var(--color-secondary);
+}
+
+.hero__orbit--production {
+  --dot-x: 72%;
+  --dot-y: 3%;
+  width: 96%;
+  aspect-ratio: 1 / 0.58;
+  rotate: -4deg;
+  color: var(--color-tertiary);
+  border-style: dashed;
+  border-color: var(--color-border-active);
+}
+
+.hero__orbit-core {
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+/* ---- Scroll indicator ---- */
+
+.hero__scroll {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--label-sm-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease;
+}
+
+.hero__scroll:hover {
+  color: var(--color-text-primary);
+}
+
+.hero__scroll-arrow {
+  animation: hero-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes hero-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* ---- Pointer depth (mouse devices only; vars are set by useHeroPointer) ---- */
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__portrait {
+    transform: translate3d(calc(var(--hero-px, 0) * 10px), calc(var(--hero-py, 0) * 6px), 0);
+    transition: transform 0.5s ease-out;
+  }
+
+  .hero__backdrop::after {
+    transform: translate3d(calc(var(--hero-px, 0) * -14px), calc(var(--hero-py, 0) * -10px), 0);
+    transition: transform 0.8s ease-out;
+  }
+}
+
+/* ---- Tablet ---- */
+
+@media (min-width: 48rem) {
+  .hero {
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    padding-top: calc(var(--header-height) + 3rem);
+  }
+
+  .hero__stage {
+    width: min(60%, 26rem);
+  }
+}
+
+/* ---- Desktop: two-column composition ---- */
+
+@media (min-width: 64rem) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .hero__stage {
+    width: auto;
+    height: min(72svh, 40rem);
+    max-width: 100%;
+    justify-self: end;
+    margin-inline: 0;
+  }
+}
