@@ -1,41 +1,75 @@
-import { useRoutes, type RouteObject } from 'react-router-dom'
-import { Hero } from '../components/hero/Hero'
+import { Navigate, useRoutes, type RouteObject } from 'react-router-dom'
+import { AdminRoot } from '../auth/AdminRoot'
+import { ProtectedRoute } from '../auth/ProtectedRoute'
 import { AdminLayout } from '../layouts/AdminLayout'
 import { PublicLayout } from '../layouts/PublicLayout'
-import { PlaceholderPage } from '../pages/PlaceholderPage'
+import { AdminDashboard } from '../pages/admin/AdminDashboard'
+import { AdminLogin } from '../pages/admin/AdminLogin'
+import { ResourceManager } from '../pages/admin/ResourceManager'
+import { MediaManager } from '../pages/admin/MediaManager'
+import { ProfileManager } from '../pages/admin/ProfileManager'
+import { NotFound } from '../pages/NotFound'
+import {
+  blogResource,
+  educationResource,
+  experienceResource,
+  messagesResource,
+  projectsResource,
+  skillsResource,
+  certificationsResource,
+  type ResourceConfig,
+} from '../pages/admin/resources'
+import { Blog } from '../pages/Blog'
+import { BlogPostPage } from '../pages/BlogPostPage'
+import { Home } from '../pages/Home'
+import { ProjectDetail } from '../pages/ProjectDetail'
+import { Projects } from '../pages/Projects'
+
+// The key forces a fresh editor state when moving between resource pages.
+const manage = (config: ResourceConfig) => <ResourceManager key={config.key} config={config} />
 
 const publicRoutes: RouteObject[] = [
   {
     element: <PublicLayout />,
     children: [
-      { index: true, element: <Hero /> },
-      { path: 'about', element: <PlaceholderPage title="About" /> },
-      { path: 'projects', element: <PlaceholderPage title="Projects" /> },
-      { path: 'projects/:slug', element: <PlaceholderPage title="Project detail" /> },
-      { path: 'blog', element: <PlaceholderPage title="Blog" /> },
-      { path: 'blog/:slug', element: <PlaceholderPage title="Blog post" /> },
-      { path: 'contact', element: <PlaceholderPage title="Contact" /> },
+      { index: true, element: <Home /> },
+      { path: 'about', element: <Navigate to="/#about" replace /> },
+      { path: 'projects', element: <Projects /> },
+      { path: 'projects/:slug', element: <ProjectDetail /> },
+      { path: 'blog', element: <Blog /> },
+      { path: 'blog/:slug', element: <BlogPostPage /> },
+      { path: 'contact', element: <Navigate to="/#contact" replace /> },
     ],
   },
 ]
 
 const adminRoutes: RouteObject[] = [
-  // Login lives outside AdminLayout: it is not part of the dashboard shell.
-  { path: '/admin/login', element: <PlaceholderPage title="Admin login" /> },
   {
-    path: '/admin',
-    element: <AdminLayout />,
+    // AuthProvider only wraps /admin, so public pages never call /auth/me.
+    element: <AdminRoot />,
     children: [
-      { index: true, element: <PlaceholderPage title="Admin dashboard" /> },
-      { path: 'profile', element: <PlaceholderPage title="Admin: Profile" /> },
-      { path: 'skills', element: <PlaceholderPage title="Admin: Skills" /> },
-      { path: 'projects', element: <PlaceholderPage title="Admin: Projects" /> },
-      { path: 'experience', element: <PlaceholderPage title="Admin: Experience" /> },
-      { path: 'education', element: <PlaceholderPage title="Admin: Education" /> },
-      { path: 'certifications', element: <PlaceholderPage title="Admin: Certifications" /> },
-      { path: 'blog', element: <PlaceholderPage title="Admin: Blog" /> },
-      { path: 'messages', element: <PlaceholderPage title="Admin: Messages" /> },
-      { path: 'media', element: <PlaceholderPage title="Admin: Media" /> },
+      { path: '/admin/login', element: <AdminLogin /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: '/admin',
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <AdminDashboard /> },
+              { path: 'profile', element: <ProfileManager /> },
+              { path: 'skills', element: manage(skillsResource) },
+              { path: 'projects', element: manage(projectsResource) },
+              { path: 'experience', element: manage(experienceResource) },
+              { path: 'education', element: manage(educationResource) },
+              { path: 'certifications', element: manage(certificationsResource) },
+              { path: 'blog', element: manage(blogResource) },
+              { path: 'messages', element: manage(messagesResource) },
+              { path: 'media', element: <MediaManager /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 ]
@@ -43,7 +77,7 @@ const adminRoutes: RouteObject[] = [
 const routes: RouteObject[] = [
   ...publicRoutes,
   ...adminRoutes,
-  { path: '*', element: <PlaceholderPage title="404: Not found" /> },
+  { path: '*', element: <NotFound /> },
 ]
 
 export function AppRoutes() {

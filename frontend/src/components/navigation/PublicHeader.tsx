@@ -1,22 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useActiveSection } from '../../hooks/useActiveSection'
 import { ThemeToggle } from '../theme/ThemeToggle'
+import logo from '../../assets/logo.png'
+import { ScrambleText } from '../ui/ScrambleText'
 import './PublicHeader.css'
 
 interface NavItem {
+  id: string
   label: string
-  to: string
 }
 
+// Every item is a section of the home page.
 const NAV_ITEMS: readonly NavItem[] = [
-  { label: 'About', to: '/about' },
-  { label: 'Skills', to: '/#skills' },
-  { label: 'Projects', to: '/projects' },
-  { label: 'Experience', to: '/#experience' },
-  { label: 'Blog', to: '/blog' },
-  { label: 'Contact', to: '/contact' },
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'blog', label: 'Blog' },
+  { id: 'contact', label: 'Contact' },
 ]
+const SECTION_IDS = NAV_ITEMS.map((item) => item.id)
 
 const MOBILE_MENU_ID = 'mobile-navigation'
 const SCROLL_THRESHOLD = 8
@@ -24,38 +29,30 @@ const DESKTOP_QUERY = '(min-width: 48rem)'
 
 interface NavItemLinkProps {
   item: NavItem
+  isActive: boolean
   onNavigate?: () => void
 }
 
-function NavItemLink({ item, onNavigate }: NavItemLinkProps) {
+function NavItemLink({ item, isActive, onNavigate }: NavItemLinkProps) {
   const location = useLocation()
 
-  // NavLink only compares pathnames, so "/#skills" and "/#experience" would
-  // both look active on "/". Hash links compare the full path + hash instead.
-  if (item.to.includes('#')) {
-    const isActive = `${location.pathname}${location.hash}` === item.to
-    return (
-      <Link
-        to={item.to}
-        className={isActive ? 'public-header__link is-active' : 'public-header__link'}
-        aria-current={isActive ? 'location' : undefined}
-        onClick={onNavigate}
-      >
-        {item.label}
-      </Link>
-    )
+  const handleClick = () => {
+    // Same hash on the home page: the URL doesn't change, so scroll by hand.
+    if (location.pathname === '/' && location.hash === `#${item.id}`) {
+      document.getElementById(item.id)?.scrollIntoView()
+    }
+    onNavigate?.()
   }
 
   return (
-    <NavLink
-      to={item.to}
-      className={({ isActive }) =>
-        isActive ? 'public-header__link is-active' : 'public-header__link'
-      }
-      onClick={onNavigate}
+    <Link
+      to={`/#${item.id}`}
+      className={isActive ? 'public-header__link is-active' : 'public-header__link'}
+      aria-current={isActive ? 'location' : undefined}
+      onClick={handleClick}
     >
-      {item.label}
-    </NavLink>
+      <ScrambleText>{item.label}</ScrambleText>
+    </Link>
   )
 }
 
@@ -75,9 +72,20 @@ function MenuIcon({ isOpen }: { isOpen: boolean }) {
 }
 
 export function PublicHeader() {
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
   const [isScrolled, setIsScrolled] = useState(() => window.scrollY > SCROLL_THRESHOLD)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuButtonRef = useRef<HTMLButtonElement>(null)
+
+  // On Home, highlight the section being read; on archive/detail pages, highlight their section.
+  const sectionInView = useActiveSection(SECTION_IDS, isHome)
+  const routeSection = pathname.startsWith('/projects')
+    ? 'projects'
+    : pathname.startsWith('/blog')
+      ? 'blog'
+      : null
+  const activeId = isHome ? sectionInView : routeSection
 
   const closeMenu = () => setIsMenuOpen(false)
 
@@ -115,21 +123,22 @@ export function PublicHeader() {
   return (
     <header className={isSolid ? 'public-header is-solid' : 'public-header'}>
       <div className="public-header__inner">
-        <Link
-          to="/"
-          className="public-header__brand"
-          aria-label="Ahmed Jhor, home"
-          onClick={closeMenu}
-        >
-          AHMED JHOR
-        </Link>
+       <Link
+  to="/"
+  className="public-header__brand"
+  aria-label="Ahmed Jhor, home"
+  onClick={closeMenu}
+>
+  <img className="public-header__logo" src={logo} alt="" width={28} height={28} />
+  <span><ScrambleText>AHMED JHOR</ScrambleText></span>
+</Link>
 
         <div className="public-header__actions">
           <nav className="public-header__nav" aria-label="Primary">
             <ul className="public-header__list">
               {NAV_ITEMS.map((item) => (
-                <li key={item.to}>
-                  <NavItemLink item={item} />
+                <li key={item.id}>
+                  <NavItemLink item={item} isActive={activeId === item.id} />
                 </li>
               ))}
             </ul>
@@ -167,8 +176,8 @@ export function PublicHeader() {
               <nav aria-label="Primary mobile">
                 <ul className="public-header__panel-list">
                   {NAV_ITEMS.map((item) => (
-                    <li key={item.to}>
-                      <NavItemLink item={item} onNavigate={closeMenu} />
+                    <li key={item.id}>
+                      <NavItemLink item={item} isActive={activeId === item.id} onNavigate={closeMenu} />
                     </li>
                   ))}
                 </ul>

@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { PublicHeader } from '../components/navigation/PublicHeader'
+import { PublicFooter } from '../components/navigation/PublicFooter'
 
 export function PublicLayout() {
   return (
@@ -11,6 +12,7 @@ export function PublicLayout() {
       <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
+      <PublicFooter />
     </>
   )
 }

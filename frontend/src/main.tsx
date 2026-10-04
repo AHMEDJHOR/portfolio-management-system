@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource-variable/inter/wght.css'
 import './styles/globals.css'
+import './styles/shared.css'
+import './styles/admin.css'
 import { App } from './app/App'
 import { AppProviders } from './app/providers/AppProviders'
 

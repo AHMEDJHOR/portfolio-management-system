@@ -1,5 +1,11 @@
+import { ScrollToHash } from '../components/ScrollToHash'
 import { AppRoutes } from '../routes'
 
 export function App() {
-  return <AppRoutes />
+  return (
+    <>
+      <ScrollToHash />
+      <AppRoutes />
+    </>
+  )
 }

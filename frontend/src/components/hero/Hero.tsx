@@ -7,6 +7,8 @@ import { SceneBoundary } from './SceneBoundary'
 import type { Detail } from './scene/config'
 import { useHeroPointer } from './useHeroPointer'
 import { hasWebGL } from './webgl'
+import { useProfile } from '../../hooks/usePortfolio'
+import { ScrambleText } from '../ui/ScrambleText'
 import './Hero.css'
 
 // Three.js lives in its own chunk, so text and portrait paint without waiting for it.
@@ -58,6 +60,9 @@ function ArrowIcon() {
 }
 
 export function Hero() {
+  const { data: profile } = useProfile()
+  const [firstName = 'Ahmed', ...rest] = (profile?.fullName ?? 'Ahmed Jhor').split(' ')
+  const lastName = rest.join(' ')
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = useReducedMotion() === true
   const hasFinePointer = useMediaQuery('(hover: hover) and (pointer: fine)')
@@ -92,7 +97,8 @@ export function Hero() {
           </motion.p>
 
           <motion.h1 id="hero-title" className="hero__title" variants={item}>
-            <span className="hero__name-line">Ahmed</span> <span className="hero__name-line">Jhor</span>{' '}
+           <span className="hero__name-line">{firstName}</span>{' '}
+           {lastName && <span className="hero__name-line">{lastName}</span>}{' '}
             <span className="hero__role">Full-Stack Developer</span>
           </motion.h1>
 
@@ -101,12 +107,12 @@ export function Hero() {
           </motion.p>
 
           <motion.div className="hero__actions" variants={item}>
-            <Link to="/projects" className="hero__button hero__button--primary">
-              View projects
+            <Link to="/#projects" className="hero__button hero__button--primary">
+              <ScrambleText>View projects</ScrambleText>
               <ArrowIcon />
             </Link>
-            <Link to="/contact" className="hero__button hero__button--ghost">
-              Contact me
+             <Link to="/#contact" className="hero__button hero__button--ghost">
+              <ScrambleText>Contact me</ScrambleText>
             </Link>
           </motion.div>
         </motion.div>

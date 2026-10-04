@@ -212,6 +212,8 @@
 
 .hero__button--ghost:hover {
   background-color: var(--color-surface-elevated);
+   color: var(--color-secondary);
+  border-color: var(--color-secondary);
 }
 
 /* ---- Portrait stage ---- */

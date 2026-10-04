@@ -32,11 +32,22 @@
 }
 
 .public-header__brand {
+  --logo-size: 2rem; /* change this one value */
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
   font-size: var(--label-md-size);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--label-tracking);
   color: var(--color-text-primary);
   border-radius: var(--radius-sm);
+}
+
+.public-header__logo {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  object-fit: contain;
 }
 
 .public-header__actions {
@@ -91,7 +102,7 @@
 }
 
 .public-header__link:hover {
-  color: var(--color-text-primary);
+  color: var(--color-secondary);
 }
 
 .public-header__link.is-active {
