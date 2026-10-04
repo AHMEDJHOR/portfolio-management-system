@@ -1,13 +1,12 @@
 import { prisma } from '../config/prisma.js';
 import { AppError } from '../utils/AppError.js';
 
-export const getBlogs = async () => {
+export const getBlogs = async (includeDrafts: boolean) => {
   return prisma.blog.findMany({
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-};
+    where: includeDrafts ? {} : { published: true },
+    orderBy: { createdAt: 'desc' },
+  })
+}
 
 export const getBlogById = async (id: string) => {
   const blog = await prisma.blog.findUnique({

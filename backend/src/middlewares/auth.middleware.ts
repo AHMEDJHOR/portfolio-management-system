@@ -22,3 +22,15 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
     next(new AppError('Invalid or expired access token', 401));
   }
 };
+
+export const optionalAuth: RequestHandler = (req, _res, next) => {
+  const authorization = req.headers.authorization
+  if (authorization?.startsWith('Bearer ')) {
+    try {
+      req.adminId = verifyAccessToken(authorization.slice(7)).adminId
+    } catch {
+      // Invalid token: treat as anonymous.
+    }
+  }
+  next()
+}

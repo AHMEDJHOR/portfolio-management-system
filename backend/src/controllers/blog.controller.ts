@@ -8,14 +8,10 @@ import {
 } from '../services/blog.service.js';
 import { AppError } from '../utils/AppError.js';
 
-export const getAll = async (_req: Request, res: Response) => {
-  const blogs = await getBlogs();
-
-  res.status(200).json({
-    success: true,
-    data: blogs,
-  });
-};
+export const getAll = async (req: Request, res: Response) => {
+  const blogs = await getBlogs(req.adminId !== undefined)
+  res.status(200).json({ success: true, data: blogs })
+}
 
 export const getById = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -25,6 +21,10 @@ export const getById = async (req: Request, res: Response) => {
   }
 
   const blog = await getBlogById(id);
+
+  if (!blog.published && req.adminId === undefined) {
+  throw new AppError('Blog not found', 404)
+}
 
   res.status(200).json({
     success: true,
