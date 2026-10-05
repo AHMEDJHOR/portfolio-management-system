@@ -2,6 +2,7 @@
 
 :root {
   --color-danger: #f87171;
+  --section-space: clamp(4rem, 9vw, 7.5rem);
 }
 
 :root[data-theme='light'] {
@@ -20,8 +21,8 @@
 }
 
 .pf-section {
-  padding-block: 5rem;
-  border-top: 1px solid var(--color-border);
+padding-block: var(--section-space);
+border-top: 1px solid var(--color-border);
 }
 
 .pf-page {
@@ -31,12 +32,12 @@
 /* ---- Headings ---- */
 
 .pf-heading {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  max-width: 40rem;
-  margin-bottom: 2.5rem;
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+ gap: 1rem;
+ max-width: 44rem;
+ margin-bottom: clamp(2rem, 4vw, 3.5rem);
 }
 
 .pf-heading--article {
@@ -555,10 +556,6 @@ textarea.pf-input {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5rem;
   }
-
-  .pf-section {
-    padding-block: 7rem;
-  }
 }
 
 @media (max-width: 40rem) {
@@ -582,9 +579,6 @@ textarea.pf-input {
     left: calc(-1.25rem - 5px);
   }
 
-  .pf-section {
-    padding-block: 3.5rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -633,4 +627,115 @@ textarea.pf-input {
 .about-page__button--primary .scramble__live,
 .site-footer__button .scramble__live {
   color: inherit;
+}
+
+/* ---- Skeleton ---- */
+
+.pf-skeleton {
+  min-height: 9rem;
+  background-color: var(--color-surface);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-text-primary) 6%, transparent),
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  animation: pf-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes pf-shimmer {
+  from {
+    background-position: -100% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-skeleton {
+    animation: none;
+  }
+}
+
+.pf-detail-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* ---- Contact ---- */
+
+.pf-form__row {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 40rem) {
+  .pf-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.contact-details dt {
+  margin-bottom: 0.25rem;
+  font-size: var(--label-sm-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.contact-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-secondary);
+}
+
+.contact-details__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+/* Off-screen rather than display:none, so simple bots still fill it. */
+.contact-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.contact-done:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }

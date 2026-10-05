@@ -11,13 +11,18 @@ interface DataStateProps {
 }
 
 export function DataState({ isPending, error, isEmpty, emptyMessage, onRetry, children }: DataStateProps) {
-  if (isPending) {
-    return (
-      <p className="pf-state" role="status">
-        Loading…
-      </p>
-    )
-  }
+if (isPending) {
+  return (
+    <div role="status">
+      <span className="sr-only">Loading…</span>
+      <div className="pf-grid" aria-hidden="true">
+        {[0, 1, 2].map((key) => (
+          <div key={key} className="pf-skeleton" />
+        ))}
+      </div>
+    </div>
+  )
+}
   if (error) {
     return (
       <div className="pf-state" role="alert">

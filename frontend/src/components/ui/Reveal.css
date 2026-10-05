@@ -1,0 +1,113 @@
+/* ---- Divider: replaces the section's border-top and draws in from the left ---- */
+
+.reveal > .pf-section,
+.reveal > .about-page {
+  position: relative;
+  border-top: 0;
+}
+
+.reveal > .pf-section::before,
+.reveal > .about-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: var(--container-padding);
+  left: var(--container-padding);
+  max-width: calc(var(--container-max) - 2 * var(--container-padding));
+  height: 1px;
+  margin-inline: auto;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-border-active) 35%, var(--color-border));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-in > .pf-section::before,
+.reveal.is-in > .about-page::before {
+  transform: scaleX(1);
+}
+
+/* ---- Content blocks rise in, one after another ---- */
+
+.reveal:not(.is-in)
+  :is(
+    .pf-grid > *,
+    .pf-timeline__item,
+    .skills-row,
+    .pf-form,
+    .contact-details,
+    .about-page__body,
+    .about-page__actions,
+    .pf-more
+  ) {
+  opacity: 0;
+}
+
+/* "backwards" only holds the hidden state during the delay, so card hover lifts still work after. */
+.reveal.is-in
+  :is(
+    .pf-grid > *,
+    .pf-timeline__item,
+    .skills-row,
+    .pf-form,
+    .contact-details,
+    .about-page__body,
+    .about-page__actions,
+    .pf-more
+  ) {
+  animation: reveal-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(150ms + var(--stagger, 0) * 90ms);
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Stagger order inside grids and timelines. */
+.reveal :is(.pf-grid, .pf-timeline) > :nth-child(2) { --stagger: 1; }
+.reveal :is(.pf-grid, .pf-timeline) > :nth-child(3) { --stagger: 2; }
+.reveal :is(.pf-grid, .pf-timeline) > :nth-child(4) { --stagger: 3; }
+.reveal :is(.pf-grid, .pf-timeline) > :nth-child(5) { --stagger: 4; }
+.reveal :is(.pf-grid, .pf-timeline) > :nth-child(n + 6) { --stagger: 5; }
+
+.reveal .skills-row:nth-child(2) { --stagger: 2; }
+.reveal .contact-details { --stagger: 1; }
+.reveal .pf-form { --stagger: 2; }
+.reveal .about-page__body { --stagger: 1; }
+.reveal .about-page__actions { --stagger: 3; }
+.reveal .pf-more { --stagger: 3; }
+
+/* The last section sits right above the footer, which has its own top spacing. */
+.reveal:last-child > .pf-section {
+  padding-bottom: calc(var(--section-space) * 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal
+    :is(
+      .pf-grid > *,
+      .pf-timeline__item,
+      .skills-row,
+      .pf-form,
+      .contact-details,
+      .about-page__body,
+      .about-page__actions,
+      .pf-more
+    ) {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .reveal > .pf-section::before,
+  .reveal > .about-page::before {
+    transform: scaleX(1);
+    transition: none;
+  }
+}

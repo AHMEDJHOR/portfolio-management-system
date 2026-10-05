@@ -1,29 +1,52 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, useRoutes, type RouteObject } from 'react-router-dom'
-import { AdminRoot } from '../auth/AdminRoot'
-import { ProtectedRoute } from '../auth/ProtectedRoute'
-import { AdminLayout } from '../layouts/AdminLayout'
 import { PublicLayout } from '../layouts/PublicLayout'
-import { AdminDashboard } from '../pages/admin/AdminDashboard'
-import { AdminLogin } from '../pages/admin/AdminLogin'
-import { ResourceManager } from '../pages/admin/ResourceManager'
-import { MediaManager } from '../pages/admin/MediaManager'
-import { ProfileManager } from '../pages/admin/ProfileManager'
+import { Home } from '../pages/Home'
 import { NotFound } from '../pages/NotFound'
 import {
   blogResource,
+  certificationsResource,
   educationResource,
   experienceResource,
   messagesResource,
   projectsResource,
   skillsResource,
-  certificationsResource,
   type ResourceConfig,
 } from '../pages/admin/resources'
-import { Blog } from '../pages/Blog'
-import { BlogPostPage } from '../pages/BlogPostPage'
-import { Home } from '../pages/Home'
-import { ProjectDetail } from '../pages/ProjectDetail'
-import { Projects } from '../pages/Projects'
+
+// Public pages
+const Projects = lazy(() => import('../pages/Projects').then((m) => ({ default: m.Projects })))
+const ProjectDetail = lazy(() =>
+  import('../pages/ProjectDetail').then((m) => ({ default: m.ProjectDetail })),
+)
+const Blog = lazy(() => import('../pages/Blog').then((m) => ({ default: m.Blog })))
+const BlogPostPage = lazy(() =>
+  import('../pages/BlogPostPage').then((m) => ({ default: m.BlogPostPage })),
+)
+
+// Admin area: nothing here is downloaded by public visitors
+const AdminRoot = lazy(() => import('../auth/AdminRoot').then((m) => ({ default: m.AdminRoot })))
+const ProtectedRoute = lazy(() =>
+  import('../auth/ProtectedRoute').then((m) => ({ default: m.ProtectedRoute })),
+)
+const AdminLayout = lazy(() =>
+  import('../layouts/AdminLayout').then((m) => ({ default: m.AdminLayout })),
+)
+const AdminLogin = lazy(() =>
+  import('../pages/admin/AdminLogin').then((m) => ({ default: m.AdminLogin })),
+)
+const AdminDashboard = lazy(() =>
+  import('../pages/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })),
+)
+const ResourceManager = lazy(() =>
+  import('../pages/admin/ResourceManager').then((m) => ({ default: m.ResourceManager })),
+)
+const MediaManager = lazy(() =>
+  import('../pages/admin/MediaManager').then((m) => ({ default: m.MediaManager })),
+)
+const ProfileManager = lazy(() =>
+  import('../pages/admin/ProfileManager').then((m) => ({ default: m.ProfileManager })),
+)
 
 // The key forces a fresh editor state when moving between resource pages.
 const manage = (config: ResourceConfig) => <ResourceManager key={config.key} config={config} />
@@ -45,7 +68,7 @@ const publicRoutes: RouteObject[] = [
 
 const adminRoutes: RouteObject[] = [
   {
-    // AuthProvider only wraps /admin, so public pages never call /auth/me.
+    // AuthProvider only wraps /admin, so public pages never call the auth endpoints.
     element: <AdminRoot />,
     children: [
       { path: '/admin/login', element: <AdminLogin /> },
@@ -81,5 +104,16 @@ const routes: RouteObject[] = [
 ]
 
 export function AppRoutes() {
-  return useRoutes(routes)
+  // Covers the admin chunks, which load outside PublicLayout.
+  return (
+    <Suspense
+      fallback={
+        <p className="pf-state" role="status">
+          Loading…
+        </p>
+      }
+    >
+      {useRoutes(routes)}
+    </Suspense>
+  )
 }

@@ -9,6 +9,8 @@ import { useHeroPointer } from './useHeroPointer'
 import { hasWebGL } from './webgl'
 import { useProfile } from '../../hooks/usePortfolio'
 import { ScrambleText } from '../ui/ScrambleText'
+import { mediaUrl } from '../../lib/media'
+import { TypeText } from '../ui/TypeText'
 import './Hero.css'
 
 // Three.js lives in its own chunk, so text and portrait paint without waiting for it.
@@ -60,7 +62,7 @@ function ArrowIcon() {
 }
 
 export function Hero() {
-  const { data: profile } = useProfile()
+  const { data: profile, isPending: profileLoading } = useProfile()
   const [firstName = 'Ahmed', ...rest] = (profile?.fullName ?? 'Ahmed Jhor').split(' ')
   const lastName = rest.join(' ')
   const sectionRef = useRef<HTMLElement>(null)
@@ -99,11 +101,17 @@ export function Hero() {
           <motion.h1 id="hero-title" className="hero__title" variants={item}>
            <span className="hero__name-line">{firstName}</span>{' '}
            {lastName && <span className="hero__name-line">{lastName}</span>}{' '}
-            <span className="hero__role">Full-Stack Developer</span>
+             <span className="hero__role">
+              <TypeText start={!profileLoading} delay={700} speed={28}>
+                {profile?.title ?? 'Full-Stack Developer'}
+              </TypeText>
+            </span>
           </motion.h1>
 
           <motion.p className="hero__description" variants={item}>
-            I build reliable digital products and thoughtful interfaces across the full stack.
+            <TypeText start delay={1100} speed={11}>
+              I build reliable digital products and thoughtful interfaces across the full stack.
+            </TypeText>
           </motion.p>
 
           <motion.div className="hero__actions" variants={item}>
@@ -146,8 +154,8 @@ export function Hero() {
           <figure className="hero__portrait">
             <img
               className="hero__image"
-              src={heroImage}
-              alt="Portrait of Ahmed Jhor"
+              src={profile?.profileImage ? mediaUrl(profile.profileImage.url) : heroImage}
+              alt={`Portrait of ${profile?.fullName ?? 'Ahmed Jhor'}`}
               decoding="async"
               fetchPriority="high"
             />

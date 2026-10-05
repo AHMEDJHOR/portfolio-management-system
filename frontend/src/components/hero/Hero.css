@@ -6,7 +6,7 @@
   position: relative;
   isolation: isolate;
   overflow: clip;
-  padding: calc(var(--header-height) + 2rem) 0 4.5rem;
+  padding: calc(var(--header-height) + 2rem) 0 5.5rem;
 }
 
 :root[data-theme='light'] .hero {
@@ -429,6 +429,7 @@
     align-items: center;
     min-height: 100svh;
     padding-top: calc(var(--header-height) + 3rem);
+    padding-bottom: 5.5rem;
   }
 
   .hero__stage {

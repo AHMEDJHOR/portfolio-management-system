@@ -1,0 +1,25 @@
+/* Not typed yet: still takes up its space, so the layout never shifts. */
+.type__rest {
+  color: transparent;
+}
+
+.type__done {
+  position: relative;
+}
+
+/* Caret: out of the text flow, so it can't change line breaks. Only while typing. */
+.type__done.is-typing::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background-color: var(--color-primary);
+  animation: type-blink 0.9s steps(1) infinite;
+}
+
+@keyframes type-blink {
+  50% {
+    opacity: 0;
+  }
+}

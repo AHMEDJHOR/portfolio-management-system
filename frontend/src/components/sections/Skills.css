@@ -1,0 +1,200 @@
+.skills-marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Full-width window. Padding keeps the hover lift from being clipped. */
+.skills-row {
+  padding-block: 0.25rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.skills-track {
+  display: flex;
+  width: max-content;
+  animation: skills-ltr linear infinite;
+  will-change: transform;
+}
+
+.skills-track--reverse {
+  animation-name: skills-rtl;
+}
+
+.skills-row:hover .skills-track,
+.skills-row:focus-within .skills-track {
+  animation-play-state: paused;
+}
+
+/* Each set is exactly half of the track, so moving by 50% loops without a jump. */
+@keyframes skills-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes skills-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.skills-set {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- Card ---- */
+
+.skills-card {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.875rem;
+  width: 15rem;
+  margin-right: 1rem; /* margin, not gap, so each set has an exact width */
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.skills-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.skills-card:hover {
+  border-color: var(--color-border-active);
+  background-color: color-mix(in srgb, var(--color-surface) 70%, var(--color-surface-elevated));
+}
+
+.skills-card:hover::before {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .skills-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Logos are often dark, so they sit on a light tile that works in both themes. */
+.skills-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.skills-card__icon img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.skills-card__letter {
+  font-size: var(--headline-sm-size);
+  font-weight: var(--weight-semibold);
+  color: #4f46e5;
+}
+
+.skills-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.skills-card__name {
+  overflow: hidden;
+  font-size: 1.0625rem;
+  font-weight: var(--weight-medium);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skills-card__category {
+  overflow: hidden;
+  font-size: var(--label-sm-size);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--label-tracking);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 40rem) {
+  .skills-card {
+    width: 12.5rem;
+    padding: 0.875rem 1rem;
+  }
+
+  .skills-card__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .skills-card__icon img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+/* ---- Reduced motion: no scrolling, a normal wrapped grid instead ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-track {
+    width: auto;
+    padding-inline: var(--container-padding);
+    animation: none;
+  }
+
+  .skills-set {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .skills-card {
+    margin-right: 0;
+    transition: none;
+  }
+
+  .skills-card[aria-hidden='true'],
+  .skills-set--clone {
+    display: none;
+  }
+
+  .skills-row {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}

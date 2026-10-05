@@ -1,0 +1,9 @@
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60; /* above the header (50) */
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  transform-origin: left;
+  pointer-events: none;
+}
