@@ -1,5 +1,4 @@
 import { prisma } from '../config/prisma.js';
-import { AppError } from '../utils/AppError.js';
 
 export const getProfile = async () => {
   return prisma.profile.findFirst({
@@ -9,30 +8,33 @@ export const getProfile = async () => {
   });
 };
 
-export const updateProfile = async (data: {
+export interface UpdateProfileData {
   fullName: string;
   title: string;
   bio: string;
-  location?: string;
+  location?: string | null;
   email: string;
-  phone?: string;
-  githubUrl?: string;
-  linkedinUrl?: string;
-  telegramUrl?: string;
-  resumeUrl?: string;
-}) => {
+  phone?: string | null;
+  githubUrl?: string | null;
+  linkedinUrl?: string | null;
+  telegramUrl?: string | null;
+  resumeUrl?: string | null;
+  profileImageId?: string | null;
+}
+
+export const updateProfile = async (data: UpdateProfileData) => {
   const existingProfile = await prisma.profile.findFirst();
 
   if (!existingProfile) {
     return prisma.profile.create({
       data,
+      include: { profileImage: true },
     });
   }
 
   return prisma.profile.update({
-    where: {
-      id: existingProfile.id,
-    },
+    where: { id: existingProfile.id },
     data,
+    include: { profileImage: true },
   });
 };

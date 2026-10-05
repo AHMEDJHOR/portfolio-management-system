@@ -7,6 +7,7 @@ import {
   remove,
 } from '../controllers/contact-message.controller.js';
 import { requireAuth } from '../middlewares/auth.middleware.js';
+import { contactRateLimiter } from '../middlewares/rateLimit.js';
 import { validateBody } from '../middlewares/validate.js';
 import {
   createContactMessageSchema,
@@ -16,7 +17,12 @@ import {
 const router = Router();
 
 // Public
-router.post('/', validateBody(createContactMessageSchema), create);
+router.post(
+  '/',
+  contactRateLimiter,
+  validateBody(createContactMessageSchema),
+  create,
+);
 
 // Admin only
 router.get('/', requireAuth, getAll);

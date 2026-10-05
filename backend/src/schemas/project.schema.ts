@@ -11,10 +11,10 @@ export const createProjectSchema = z.object({
       'Slug must contain only lowercase letters, numbers, and hyphens',
     ),
   description: z.string().trim().min(1, 'Project description is required'),
-  githubUrl: z.string().url('Invalid GitHub URL').optional(),
-  liveUrl: z.string().url('Invalid live URL').optional(),
+  githubUrl: z.string().url('Invalid GitHub URL').nullable().optional(),
+  liveUrl: z.string().url('Invalid live URL').nullable().optional(),
   featured: z.boolean().optional(),
-  thumbnailId: z.string().uuid('Invalid thumbnail ID').optional(),
+  thumbnailId: z.string().uuid('Invalid thumbnail ID').nullable().optional(),
   skillIds: z.array(z.string().uuid('Invalid skill ID')).optional(),
 });
 

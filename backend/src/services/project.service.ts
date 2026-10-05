@@ -168,13 +168,9 @@ export const updateProject = async (
       where: { id },
       data: {
         ...projectData,
-        ...(thumbnailId && {
-          thumbnail: {
-            connect: {
-              id: thumbnailId,
-            },
-          },
-        }),
+       ...(thumbnailId !== undefined && {
+  thumbnail: thumbnailId ? { connect: { id: thumbnailId } } : { disconnect: true },
+}),
       },
     });
 
