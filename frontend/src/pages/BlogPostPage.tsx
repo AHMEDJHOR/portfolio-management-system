@@ -3,8 +3,10 @@ import { DataState } from '../components/ui/DataState'
 import { useBlogPost } from '../hooks/usePortfolio'
 import { formatDate, toParagraphs } from '../lib/format'
 import { Seo } from '../components/Seo'
+import { useI18n } from '../i18n/useI18n'
 
 export function BlogPostPage() {
+  const { t } = useI18n()
   const { slug = '' } = useParams()
   const query = useBlogPost(slug)
   const post = query.data?.published ? query.data : undefined
@@ -13,7 +15,7 @@ export function BlogPostPage() {
     <article className="pf-page">
       <div className="pf-container pf-narrow">
         <Link className="pf-link" to="/#blog">
-          ← Back to blog
+          ← {t('blog.back')}
         </Link>
 
         <DataState

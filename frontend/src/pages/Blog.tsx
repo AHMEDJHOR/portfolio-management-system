@@ -4,8 +4,10 @@ import { DataState } from '../components/ui/DataState'
 import { useBlogPosts } from '../hooks/usePortfolio'
 import { formatDate } from '../lib/format'
 import { Seo } from '../components/Seo'
+import { useI18n } from '../i18n/useI18n'
 
 export function Blog() {
+  const { t } = useI18n()
   const query = useBlogPosts()
   const posts = query.data ?? []
 
@@ -18,9 +20,9 @@ export function Blog() {
           <SectionHeading
             level="h1"
             id="blog-title"
-            label="Blog"
-            title="Notes on building software"
-            lead="Short write-ups on what I learn while shipping."
+            label={t('blog.label')}
+            title={t('blog.title')}
+            lead={t('blog.lead')}
           />
           <DataState
             isPending={query.isPending}

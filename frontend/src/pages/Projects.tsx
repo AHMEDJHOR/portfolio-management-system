@@ -3,8 +3,10 @@ import { SectionHeading } from '../components/sections/SectionHeading'
 import { DataState } from '../components/ui/DataState'
 import { useProjects } from '../hooks/usePortfolio'
 import { Seo } from '../components/Seo'
+import { useI18n } from '../i18n/useI18n'
 
 export function Projects() {
+  const { t } = useI18n()
   const query = useProjects()
   const projects = query.data ?? []
 
@@ -17,9 +19,9 @@ export function Projects() {
           <SectionHeading
             level="h1"
             id="projects-title"
-            label="Projects"
-            title="Things I have built"
-            lead="Case studies, source code and live demos where available."
+            label={t('projects.label')}
+            title={t('projects.title')}
+            lead={t('projects.lead')}
           />
           <DataState
             isPending={query.isPending}

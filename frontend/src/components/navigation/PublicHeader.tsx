@@ -5,22 +5,11 @@ import { useActiveSection } from '../../hooks/useActiveSection'
 import { ThemeToggle } from '../theme/ThemeToggle'
 import logo from '../../assets/logo.png'
 import { ScrambleText } from '../ui/ScrambleText'
+import { NAV_ITEMS, type NavItem } from '../../i18n/nav'
+import { useI18n } from '../../i18n/useI18n'
+import { LanguageToggle } from '../ui/LanguageToggle'
 import './PublicHeader.css'
 
-interface NavItem {
-  id: string
-  label: string
-}
-
-// Every item is a section of the home page.
-const NAV_ITEMS: readonly NavItem[] = [
-  { id: 'about', label: 'About' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'blog', label: 'Blog' },
-  { id: 'contact', label: 'Contact' },
-]
 const SECTION_IDS = NAV_ITEMS.map((item) => item.id)
 
 const MOBILE_MENU_ID = 'mobile-navigation'
@@ -35,6 +24,7 @@ interface NavItemLinkProps {
 
 function NavItemLink({ item, isActive, onNavigate }: NavItemLinkProps) {
   const location = useLocation()
+  const { t } = useI18n()
 
   const handleClick = () => {
     // Same hash on the home page: the URL doesn't change, so scroll by hand.
@@ -51,7 +41,7 @@ function NavItemLink({ item, isActive, onNavigate }: NavItemLinkProps) {
       aria-current={isActive ? 'location' : undefined}
       onClick={handleClick}
     >
-      <ScrambleText>{item.label}</ScrambleText>
+      <ScrambleText>{t(item.labelKey)}</ScrambleText>
     </Link>
   )
 }
@@ -73,6 +63,7 @@ function MenuIcon({ isOpen }: { isOpen: boolean }) {
 
 export function PublicHeader() {
   const { pathname } = useLocation()
+  const { t } = useI18n()
   const isHome = pathname === '/'
   const [isScrolled, setIsScrolled] = useState(() => window.scrollY > SCROLL_THRESHOLD)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -126,7 +117,7 @@ export function PublicHeader() {
        <Link
   to="/"
   className="public-header__brand"
-  aria-label="Ahmed Jhor, home"
+  aria-label={t('header.home')}
   onClick={closeMenu}
 >
   <img className="public-header__logo" src={logo} alt="" width={28} height={28} />
@@ -145,6 +136,7 @@ export function PublicHeader() {
           </nav>
 
           <div className="public-header__desktop-toggle">
+            <LanguageToggle />
             <ThemeToggle />
           </div>
 
@@ -152,7 +144,7 @@ export function PublicHeader() {
             ref={menuButtonRef}
             type="button"
             className="public-header__menu-button"
-            aria-label="Menu"
+            aria-label={t('header.menu')}
             aria-expanded={isMenuOpen}
             aria-controls={MOBILE_MENU_ID}
             onClick={() => setIsMenuOpen((open) => !open)}
@@ -183,9 +175,14 @@ export function PublicHeader() {
                 </ul>
               </nav>
               <div className="public-header__panel-theme">
-                <span>Theme</span>
-                <ThemeToggle />
-              </div>
+  <span>{t('header.language')}</span>
+  <LanguageToggle />
+</div>
+
+<div className="public-header__panel-theme">
+  <span>{t('header.theme')}</span>
+  <ThemeToggle />
+</div>
             </div>
           </motion.div>
         )}

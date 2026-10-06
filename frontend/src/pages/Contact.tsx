@@ -5,8 +5,10 @@ import { ScrambleText } from '../components/ui/ScrambleText'
 import { useProfile } from '../hooks/usePortfolio'
 import { getErrorMessage } from '../lib/errors'
 import { safeHref } from '../lib/format'
+import { useI18n } from '../i18n/useI18n'
 import { sendContactMessage } from '../services/portfolio'
 import type { ContactInput } from '../types'
+import type { MessageKey } from '../i18n/messages'
 
 type Errors = Partial<Record<keyof ContactInput, string>>
 
@@ -14,12 +16,12 @@ const EMPTY: ContactInput = { name: '', email: '', subject: '', message: '' }
 const FIELD_ORDER: readonly (keyof ContactInput)[] = ['name', 'email', 'subject', 'message']
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function validate(values: ContactInput): Errors {
+function validate(values: ContactInput, t: (key: MessageKey) => string): Errors {
   const errors: Errors = {}
-  if (values.name.trim().length < 2) errors.name = 'Please enter your name.'
-  if (!EMAIL_PATTERN.test(values.email.trim())) errors.email = 'Please enter a valid email address.'
-  if (values.subject.trim().length < 3) errors.subject = 'Please add a short subject.'
-  if (values.message.trim().length < 10) errors.message = 'Please write at least 10 characters.'
+  if (values.name.trim().length < 2) errors.name = t('contact.err.name')
+  if (!EMAIL_PATTERN.test(values.email.trim())) errors.email = t('contact.err.email')
+  if (values.subject.trim().length < 3) errors.subject = t('contact.err.subject')
+  if (values.message.trim().length < 10) errors.message = t('contact.err.message')
   return errors
 }
 
@@ -68,6 +70,7 @@ function TextField({ name, label, value, error, onChange, type = 'text', autoCom
 
 function ContactDetails() {
   const { data: profile } = useProfile()
+  const { t } = useI18n()
   if (!profile) return null
 
   const phoneHref = profile.phone ? `tel:${profile.phone.replace(/[^\d+]/g, '')}` : null
@@ -80,7 +83,7 @@ function ContactDetails() {
   return (
     <dl className="contact-details">
       <div>
-        <dt>Email</dt>
+        <dt>{t('contact.email')}</dt>
         <dd>
           <a className="pf-link" href={`mailto:${profile.email}`}>
             {profile.email}
@@ -89,7 +92,7 @@ function ContactDetails() {
       </div>
       {profile.phone && phoneHref && (
         <div>
-          <dt>Phone</dt>
+          <dt>{t('contact.phone')}</dt>
           <dd>
             <a className="pf-link" href={phoneHref}>
               {profile.phone}
@@ -99,13 +102,13 @@ function ContactDetails() {
       )}
       {profile.location && (
         <div>
-          <dt>Location</dt>
+          <dt>{t('contact.location')}</dt>
           <dd>{profile.location}</dd>
         </div>
       )}
       {socials.length > 0 && (
         <div>
-          <dt>Elsewhere</dt>
+          <dt>{t('contact.elsewhere')}</dt>
           <dd className="contact-details__links">
             {socials.map((link) => (
               <a key={link.label} className="pf-link" href={link.href} target="_blank" rel="noopener noreferrer">
@@ -121,6 +124,7 @@ function ContactDetails() {
 }
 
 export function Contact() {
+  const { t } = useI18n()
   const [values, setValues] = useState<ContactInput>(EMPTY)
   const [errors, setErrors] = useState<Errors>({})
   const [trap, setTrap] = useState('') // honeypot: real visitors never see or fill this
@@ -154,7 +158,7 @@ export function Contact() {
       return
     }
 
-    const found = validate(values)
+    const found = validate(values, t)
     setErrors(found)
     const firstInvalid = FIELD_ORDER.find((field) => found[field])
     if (firstInvalid) {
@@ -182,33 +186,33 @@ export function Contact() {
         <div>
           <SectionHeading
             id="contact-title"
-            label="Contact"
-            title="Let's talk about your project."
-            lead="Send a message and I will reply by email, usually within a couple of days."
+            label={t('contact.label')}
+            title={t('contact.title')}
+            lead={t('contact.lead')}
           />
           <ContactDetails />
         </div>
 
         {sent ? (
           <div ref={confirmationRef} className="contact-done" role="status" tabIndex={-1}>
-            <h3 className="pf-card__title">Message sent</h3>
-            <p className="pf-card__text">Thank you for reaching out. I will get back to you by email soon.</p>
+            <h3 className="pf-card__title">{t('contact.doneTitle')}</h3>
+            <p className="pf-card__text">{t('contact.doneText')}</p>
             <button type="button" className="pf-button pf-button--ghost" onClick={sendAnother}>
-              Send another message
+              {t('contact.another')}
             </button>
           </div>
         ) : (
           <form className="pf-form" onSubmit={handleSubmit} noValidate>
             <div className="pf-form__row">
-              <TextField name="name" label="Name" autoComplete="name" value={values.name} error={errors.name} onChange={update('name')} />
-              <TextField name="email" label="Email" type="email" autoComplete="email" value={values.email} error={errors.email} onChange={update('email')} />
+              <TextField name="name" label={t('contact.name')} autoComplete="name" value={values.name} error={errors.name} onChange={update('name')} />
+              <TextField name="email" label={t('contact.email')} type="email" autoComplete="email" value={values.email} error={errors.email} onChange={update('email')} />
             </div>
-            <TextField name="subject" label="Subject" value={values.subject} error={errors.subject} onChange={update('subject')} />
-            <TextField name="message" label="Message" multiline value={values.message} error={errors.message} onChange={update('message')} />
+            <TextField name="subject" label={t('contact.subject')} value={values.subject} error={errors.subject} onChange={update('subject')} />
+            <TextField name="message" label={t('contact.message')} multiline value={values.message} error={errors.message} onChange={update('message')} />
 
             {/* Honeypot: hidden from people and assistive tech, tempting to bots. */}
             <div className="contact-trap" aria-hidden="true">
-              <label htmlFor="contact-website">Leave this field empty</label>
+             <label htmlFor="contact-website">Leave this field empty</label>
               <input
                 id="contact-website"
                 name="website"
@@ -227,7 +231,7 @@ export function Contact() {
             )}
 
             <button type="submit" className="pf-button pf-button--primary" disabled={mutation.isPending}>
-              {mutation.isPending ? 'Sending…' : <ScrambleText>Send message</ScrambleText>}
+              {mutation.isPending ? t('contact.sending') : <ScrambleText>{t('contact.send')}</ScrambleText>}
             </button>
           </form>
         )}

@@ -11,6 +11,7 @@ import { useProfile } from '../../hooks/usePortfolio'
 import { ScrambleText } from '../ui/ScrambleText'
 import { mediaUrl } from '../../lib/media'
 import { TypeText } from '../ui/TypeText'
+import { useI18n } from '../../i18n/useI18n'
 import './Hero.css'
 
 // Three.js lives in its own chunk, so text and portrait paint without waiting for it.
@@ -63,6 +64,7 @@ function ArrowIcon() {
 
 export function Hero() {
   const { data: profile, isPending: profileLoading } = useProfile()
+  const { t } = useI18n()
   const [firstName = 'Ahmed', ...rest] = (profile?.fullName ?? 'Ahmed Jhor').split(' ')
   const lastName = rest.join(' ')
   const sectionRef = useRef<HTMLElement>(null)
@@ -95,7 +97,7 @@ export function Hero() {
         <motion.div className="hero__content" variants={content} initial="hidden" animate="show">
           <motion.p className="hero__status" variants={item}>
             <span className="hero__status-dot" aria-hidden="true" />
-            Available for opportunities
+            {t('hero.status')}
           </motion.p>
 
           <motion.h1 id="hero-title" className="hero__title" variants={item}>
@@ -110,17 +112,17 @@ export function Hero() {
 
           <motion.p className="hero__description" variants={item}>
             <TypeText start delay={1100} speed={11}>
-              I build reliable digital products and thoughtful interfaces across the full stack.
+              {t('hero.description')}
             </TypeText>
           </motion.p>
 
           <motion.div className="hero__actions" variants={item}>
             <Link to="/#projects" className="hero__button hero__button--primary">
-              <ScrambleText>View projects</ScrambleText>
+              <ScrambleText>{t('hero.viewProjects')}</ScrambleText>
               <ArrowIcon />
             </Link>
              <Link to="/#contact" className="hero__button hero__button--ghost">
-              <ScrambleText>Contact me</ScrambleText>
+              <ScrambleText>{t('hero.contactMe')}</ScrambleText>
             </Link>
           </motion.div>
         </motion.div>
@@ -155,7 +157,7 @@ export function Hero() {
             <img
               className="hero__image"
               src={profile?.profileImage ? mediaUrl(profile.profileImage.url) : heroImage}
-              alt={`Portrait of ${profile?.fullName ?? 'Ahmed Jhor'}`}
+              alt={t('hero.portraitAlt', { name: profile?.fullName ?? 'Ahmed Jhor' })}
               decoding="async"
               fetchPriority="high"
             />
@@ -188,7 +190,7 @@ export function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.1 }}
       >
-        <span>Scroll to explore</span>
+        <span>{t('hero.scroll')}</span>
         <span className="hero__scroll-arrow" aria-hidden="true">
           ↓
         </span>

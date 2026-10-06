@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useBlogPosts } from '../../hooks/usePortfolio'
 import { formatDate } from '../../lib/format'
+import { useI18n } from '../../i18n/useI18n'
 import { DataState } from '../ui/DataState'
 import { SectionHeading } from './SectionHeading'
 import { ScrambleText } from '../ui/ScrambleText'
@@ -8,6 +9,7 @@ import { ScrambleText } from '../ui/ScrambleText'
 const LATEST_LIMIT = 3
 
 export function BlogSection() {
+  const { t } = useI18n()
   const query = useBlogPosts()
   const posts = (query.data ?? []).slice(0, LATEST_LIMIT)
 
@@ -16,15 +18,15 @@ export function BlogSection() {
       <div className="pf-container">
         <SectionHeading
           id="blog-section-title"
-          label="Blog"
-          title="Notes on building software"
-          lead="Short write-ups on what I learn while shipping."
+          label={t('blog.label')}
+          title={t('blog.title')}
+          lead={t('blog.lead')}
         />
         <DataState
           isPending={query.isPending}
           error={query.error}
           isEmpty={posts.length === 0}
-          emptyMessage="No articles yet. Check back soon."
+          emptyMessage={t('blog.empty')}
           onRetry={() => void query.refetch()}
         >
           <ul className="pf-grid">
@@ -42,7 +44,7 @@ export function BlogSection() {
           </ul>
           <p className="pf-more">
             <Link className="pf-link" to="/blog">
-              <ScrambleText>All articles</ScrambleText>
+              <ScrambleText>{t('blog.all')}</ScrambleText>
             </Link>
           </p>
         </DataState>

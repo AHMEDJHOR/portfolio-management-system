@@ -1,5 +1,6 @@
 import { useEducation, useExperience } from '../../hooks/usePortfolio'
 import { formatRange } from '../../lib/format'
+import { useI18n } from '../../i18n/useI18n'
 import { DataState } from '../ui/DataState'
 import { SectionHeading } from './SectionHeading'
 
@@ -30,6 +31,7 @@ function Timeline({ entries }: { entries: readonly TimelineEntry[] }) {
 }
 
 export function ExperienceSection() {
+  const { t } = useI18n()
   const experience = useExperience()
   const education = useEducation()
 
@@ -37,7 +39,7 @@ export function ExperienceSection() {
     id: item.id,
     title: item.position,
     subtitle: item.company,
-    period: formatRange(item.startDate, item.isCurrent ? null : item.endDate),
+    period: formatRange(item.startDate, item.isCurrent ? null : item.endDate, t('exp.present')),
     description: item.description,
   }))
 
@@ -45,7 +47,7 @@ export function ExperienceSection() {
     id: item.id,
     title: item.degree,
     subtitle: `${item.institution} · ${item.fieldOfStudy}`,
-    period: formatRange(item.startDate, item.endDate),
+    period: formatRange(item.startDate, item.endDate, t('exp.present')),
     description: item.description,
   }))
 
@@ -54,29 +56,29 @@ export function ExperienceSection() {
       <div className="pf-container">
         <SectionHeading
           id="experience-title"
-          label="Experience & education"
-          title="Where I have worked and studied"
+          label={t('exp.label')}
+          title={t('exp.title')}
         />
         <div className="pf-timelines">
           <div>
-            <h3 className="pf-subtitle">Experience</h3>
+            <h3 className="pf-subtitle">{t('exp.work')}</h3>
             <DataState
               isPending={experience.isPending}
               error={experience.error}
               isEmpty={work.length === 0}
-              emptyMessage="Experience will appear here soon."
+              emptyMessage={t('exp.emptyWork')}
               onRetry={() => void experience.refetch()}
             >
               <Timeline entries={work} />
             </DataState>
           </div>
           <div>
-            <h3 className="pf-subtitle">Education</h3>
+            <h3 className="pf-subtitle">{t('exp.study')}</h3>
             <DataState
               isPending={education.isPending}
               error={education.error}
               isEmpty={study.length === 0}
-              emptyMessage="Education will appear here soon."
+              emptyMessage={t('exp.emptyStudy')}
               onRetry={() => void education.refetch()}
             >
               <Timeline entries={study} />

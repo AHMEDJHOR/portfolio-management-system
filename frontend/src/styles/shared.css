@@ -9,6 +9,26 @@
   --color-danger: #b91c1c;
 }
 
+:root[lang='am'] {
+  --font-sans: 'Inter Variable', Inter, 'Noto Sans Ethiopic', 'Nirmala UI', system-ui, sans-serif;
+  --label-tracking: 0.02em;
+  --display-tracking: 0;
+  --headline-lg-tracking: 0;
+  --headline-md-tracking: 0;
+  --headline-sm-tracking: 0;
+}
+
+:root[lang='am'] body {
+  line-height: 1.75;
+}
+
+:root[lang='am'] .pf-title,
+:root[lang='am'] .about-page__title,
+:root[lang='am'] .site-footer__headline {
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
 .pf-container {
   width: 100%;
   max-width: var(--container-max);
@@ -738,4 +758,32 @@ textarea.pf-input {
 .contact-done:focus-visible {
   outline: 2px solid var(--color-secondary);
   outline-offset: 2px;
+}
+
+.pf-tag--more {
+  padding: 0;
+  border-style: dashed;
+}
+
+.pf-tag--more a,
+.pf-tag--more span {
+  position: relative;
+  z-index: 1; /* above the card's stretched link */
+  display: block;
+  padding: 0.1875rem 0.625rem;
+  color: var(--color-primary);
+}
+
+.pf-tag--more a:hover {
+  color: var(--color-secondary);
+}
+
+.pf-tech {
+  margin-top: 3rem;
+}
+
+.pf-tech-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.875rem;
 }

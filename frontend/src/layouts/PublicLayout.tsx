@@ -4,14 +4,16 @@ import { ErrorBoundary } from '../components/ErrorBoundary'
 import { PublicHeader } from '../components/navigation/PublicHeader'
 import { PublicFooter } from '../components/navigation/PublicFooter'
 import { ScrollProgress } from '../components/ui/ScrollProgress'
+import { useI18n } from '../i18n/useI18n'
 
 export function PublicLayout() {
   const { pathname } = useLocation()
+  const { t } = useI18n()
 
   return (
     <>
       <a href="#main-content" className="skip-link">
-        Skip to content
+        {t('skip')}
       </a>
 
       <ScrollProgress />

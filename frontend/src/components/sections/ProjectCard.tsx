@@ -4,8 +4,10 @@ import type { Project } from '../../types'
 import { TagList } from '../ui/TagList'
 import { mediaUrl } from '../../lib/media'
 import { ScrambleText } from '../ui/ScrambleText'
+import { useI18n } from '../../i18n/useI18n'
 
 export function ProjectLinks({ project }: { project: Project }) {
+  const { t } = useI18n()
   const github = safeHref(project.githubUrl)
   const live = safeHref(project.liveUrl)
   if (!github && !live) return null
@@ -18,9 +20,9 @@ export function ProjectLinks({ project }: { project: Project }) {
           href={github}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${project.title} on GitHub (opens in new tab)`}
+          aria-label={`${project.title} on ${t('project.github')} (opens in new tab)`}
         >
-          <ScrambleText>GitHub</ScrambleText>
+          <ScrambleText>{t('project.github')}</ScrambleText>
         </a>
       )}
       {live && (
@@ -29,9 +31,9 @@ export function ProjectLinks({ project }: { project: Project }) {
           href={live}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${project.title} live demo (opens in new tab)`}
+          aria-label={`${project.title} ${t('project.live')} (opens in new tab)`}
         >
-          <ScrambleText>Live demo</ScrambleText>
+          <ScrambleText>{t('project.live')}</ScrambleText>
         </a>
       )}
     </div>
@@ -54,7 +56,12 @@ export function ProjectCard({ project }: { project: Project }) {
         <Link to={`/projects/${project.slug}`}>{project.title}</Link>
       </h3>
       <p className="pf-card__text">{truncate(project.description, 160)}</p>
-      <TagList tags={project.technologies} label={`${project.title} technologies`} />
+      <TagList
+        tags={project.technologies}
+        label={`${project.title} technologies`}
+        limit={3}
+        moreHref={`/projects/${project.slug}#technologies`}
+      />
       <ProjectLinks project={project} />
     </li>
   )

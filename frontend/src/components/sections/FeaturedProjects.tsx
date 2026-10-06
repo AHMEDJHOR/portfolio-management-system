@@ -4,10 +4,12 @@ import { DataState } from '../ui/DataState'
 import { ProjectCard } from './ProjectCard'
 import { SectionHeading } from './SectionHeading'
 import { ScrambleText } from '../ui/ScrambleText'
+import { useI18n } from '../../i18n/useI18n'
 
 const FEATURED_LIMIT = 3
 
 export function FeaturedProjects() {
+  const { t } = useI18n()
   const query = useProjects()
   const featured = (query.data ?? []).filter((project) => project.featured).slice(0, FEATURED_LIMIT)
 
@@ -16,15 +18,15 @@ export function FeaturedProjects() {
       <div className="pf-container">
         <SectionHeading
           id="featured-title"
-          label="Projects"
-          title="Selected work"
-          lead="A few projects that show how I build, from data model to interface."
+          label={t('projects.label')}
+          title={t('projects.title')}
+          lead={t('projects.lead')}
         />
         <DataState
           isPending={query.isPending}
           error={query.error}
           isEmpty={featured.length === 0}
-          emptyMessage="Featured projects will appear here soon."
+          emptyMessage={t('projects.empty')}
           onRetry={() => void query.refetch()}
         >
           <ul className="pf-grid">
@@ -34,7 +36,7 @@ export function FeaturedProjects() {
           </ul>
           <p className="pf-more">
             <Link className="pf-link" to="/projects">
-              <ScrambleText>All projects</ScrambleText>
+              <ScrambleText>{t('projects.all')}</ScrambleText>
             </Link>
           </p>
         </DataState>

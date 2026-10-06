@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom'
+import { useI18n } from '../i18n/useI18n'
 
 export function NotFound() {
+  const { t } = useI18n()
+
   return (
     <main className="pf-page">
       <div className="pf-container pf-narrow">
         <p className="pf-label">404</p>
-        <h1 className="pf-title">Page not found</h1>
-        <p className="pf-lead">The page you are looking for does not exist or has moved.</p>
+        <h1 className="pf-title">{t('notFound.title')}</h1>
+        <p className="pf-lead">{t('notFound.text')}</p>
         <p className="pf-more">
           <Link className="pf-link" to="/">
-            Back to home
+            {t('notFound.home')}
           </Link>
         </p>
       </div>

@@ -17,6 +17,7 @@ export interface Project {
   thumbnail: Media | null
   /** Skill names, flattened from the ProjectTechnology join rows. */
   technologies: string[]
+  skills: ProjectSkill[]
 }
 
 export interface Experience {
@@ -91,4 +92,10 @@ export interface Certification {
   issuer: string
   issueDate: string
   credentialUrl: string | null
+}
+
+export interface ProjectSkill {
+  name: string
+  category: string
+  icon: string | null
 }

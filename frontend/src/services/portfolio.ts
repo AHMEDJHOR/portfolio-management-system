@@ -1,26 +1,29 @@
 import { apiClient, unwrap, unwrapList } from '../lib/api-client'
 import { isRecord } from '../lib/guards'
-import type { BlogPost, ContactInput, Education, Experience, Project, Skill,Profile,Certification } from '../types'
+import type { BlogPost, ContactInput, Education, Experience, Project, Skill,Profile,Certification,ProjectSkill  } from '../types'
 
 const PAGE = { page: 1, limit: 100 }
 
-type ApiProject = Omit<Project, 'technologies'> & { technologies?: unknown[] }
+type ApiProject = Omit<Project, 'technologies' | 'skills'> & { technologies?: unknown[] }
 
-// Accepts "TypeScript", { name }, or the join row { skill: { name } }.
-function technologyName(entry: unknown): string | null {
-  if (typeof entry === 'string') return entry
-  if (!isRecord(entry)) return null
-  if (typeof entry.name === 'string') return entry.name
-  if (isRecord(entry.skill) && typeof entry.skill.name === 'string') return entry.skill.name
-  return null
+// Accepts "TypeScript", { name, ... } or the join row { skill: { name, ... } }.
+function toSkill(entry: unknown): ProjectSkill | null {
+  const source = isRecord(entry) && isRecord(entry.skill) ? entry.skill : entry
+  if (typeof source === 'string') return { name: source, category: '', icon: null }
+  if (!isRecord(source) || typeof source.name !== 'string') return null
+  return {
+    name: source.name,
+    category: typeof source.category === 'string' ? source.category : '',
+    icon: typeof source.icon === 'string' ? source.icon : null,
+  }
 }
 
 function toProject(raw: ApiProject): Project {
-  const names = (raw.technologies ?? []).flatMap((entry) => {
-    const name = technologyName(entry)
-    return name ? [name] : []
+  const skills = (raw.technologies ?? []).flatMap((entry) => {
+    const skill = toSkill(entry)
+    return skill ? [skill] : []
   })
-  return { ...raw, technologies: names }
+  return { ...raw, technologies: skills.map((skill) => skill.name), skills }
 }
 
 export const getSkills = (): Promise<Skill[]> => unwrapList<Skill>(apiClient.get('/skills'))

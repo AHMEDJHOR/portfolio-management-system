@@ -4,8 +4,8 @@ const longDate = new Intl.DateTimeFormat('en', { dateStyle: 'long' })
 export const formatMonth = (iso: string): string => monthYear.format(new Date(iso))
 export const formatDate = (iso: string): string => longDate.format(new Date(iso))
 
-export function formatRange(start: string, end: string | null): string {
-  return `${formatMonth(start)} – ${end ? formatMonth(end) : 'Present'}`
+export function formatRange(start: string, end: string | null, present = 'Present'): string {
+  return `${formatMonth(start)} – ${end ? formatMonth(end) : present}`
 }
 
 /** Splits plain text into paragraphs. Rendering text nodes keeps CMS content free of HTML injection. */

@@ -1,4 +1,5 @@
 import { useTheme } from './useTheme'
+import { useI18n } from '../../i18n/useI18n'
 import './ThemeToggle.css'
 
 function SunIcon() {
@@ -36,6 +37,7 @@ function MoonIcon() {
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
+  const { t } = useI18n()
   const isDark = theme === 'dark'
 
   // The label stays constant and aria-pressed carries the state, so screen
@@ -45,7 +47,7 @@ export function ThemeToggle() {
       type="button"
       className="theme-toggle"
       onClick={toggleTheme}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={t('theme.dark')}
     >
       {isDark ? <MoonIcon /> : <SunIcon />}
     </button>
