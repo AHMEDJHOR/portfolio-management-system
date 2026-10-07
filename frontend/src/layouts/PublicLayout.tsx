@@ -4,6 +4,7 @@ import { ErrorBoundary } from '../components/ErrorBoundary'
 import { PublicHeader } from '../components/navigation/PublicHeader'
 import { PublicFooter } from '../components/navigation/PublicFooter'
 import { ScrollProgress } from '../components/ui/ScrollProgress'
+import { SiteBackground } from '../components/ui/SiteBackground'
 import { useI18n } from '../i18n/useI18n'
 
 export function PublicLayout() {
@@ -16,10 +17,11 @@ export function PublicLayout() {
         {t('skip')}
       </a>
 
+      <SiteBackground />
       <ScrollProgress />
-
+      
       <PublicHeader />
-
+      
       <main id="main-content" tabIndex={-1}>
         <ErrorBoundary key={pathname}>
         <Suspense

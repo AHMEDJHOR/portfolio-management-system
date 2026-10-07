@@ -12,6 +12,7 @@ const LINKS = [
   { to: '/admin/blog', label: 'Blog' },
   { to: '/admin/messages', label: 'Messages' },
   { to: '/admin/media', label: 'Media' },
+  { to: '/admin/comments', label: 'Comments' },
 ] as const
 
 export function AdminLayout() {

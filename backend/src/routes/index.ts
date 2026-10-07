@@ -10,6 +10,7 @@ import certificationRoutes from './certification.routes.js';
 import blogRoutes from './blog.routes.js';
 import contactMessageRoutes from './contact-message.routes.js';
 import mediaRoutes from './media.routes.js';
+import commentRoutes from './comment.routes.js'
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/certifications', certificationRoutes);
 router.use('/blogs', blogRoutes);
 router.use('/contact-messages', contactMessageRoutes);
 router.use('/media', mediaRoutes);
+router.use('/comments', commentRoutes);
 
 export default router;

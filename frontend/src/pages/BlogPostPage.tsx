@@ -4,6 +4,7 @@ import { useBlogPost } from '../hooks/usePortfolio'
 import { formatDate, toParagraphs } from '../lib/format'
 import { Seo } from '../components/Seo'
 import { useI18n } from '../i18n/useI18n'
+import { CommentSection } from '../components/blog/CommentSection'
 
 export function BlogPostPage() {
   const { t } = useI18n()
@@ -44,6 +45,7 @@ export function BlogPostPage() {
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
+              <CommentSection blogId={post.id} />
             </>
           )}
         </DataState>

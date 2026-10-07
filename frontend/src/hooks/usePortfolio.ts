@@ -9,6 +9,7 @@ import {
   getSkills,
   getProfile,
   getCertifications,
+  getComments,
 } from '../services/portfolio'
 import type { BlogPost } from '../types'
 
@@ -36,3 +37,6 @@ export const useProfile = () =>
   useQuery({ queryKey: ['profile'], queryFn: getProfile, retry: false })
 export const useCertifications = () =>
   useQuery({ queryKey: ['certifications'], queryFn: getCertifications })
+
+export const useComments = (blogId: string) =>
+  useQuery({ queryKey: ['comments', blogId], queryFn: () => getComments(blogId), enabled: blogId !== '' })

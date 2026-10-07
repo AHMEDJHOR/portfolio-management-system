@@ -99,3 +99,16 @@ export interface ProjectSkill {
   category: string
   icon: string | null
 }
+
+export interface BlogComment {
+  id: string
+  name: string
+  content: string
+  createdAt: string
+}
+
+export interface CommentInput {
+  name: string
+  email: string
+  content: string
+}

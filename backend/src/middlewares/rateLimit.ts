@@ -36,3 +36,12 @@ export const contactRateLimiter = rateLimit({
     message: 'Too many messages. Please try again later.',
   },
 });
+
+// Public comments: 10 per hour per IP.
+export const commentRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many comments. Please try again later.' },
+});

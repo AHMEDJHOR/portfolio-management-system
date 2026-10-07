@@ -9,6 +9,7 @@ import { createResource, deleteResource, updateResource, type Item, type Payload
 import type { FieldConfig, ResourceConfig } from './resources'
 import { useMediaList } from '../../hooks/useMedia'
 import { mediaLabel, mediaUrl } from '../../lib/media'
+import { useConfirm } from '../../components/ui/useConfirm'
 
 type FieldValue = string | boolean | string[]
 type FormState = Record<string, FieldValue>
@@ -143,13 +144,14 @@ function SkillPicker({ field, value, onChange }: FieldInputProps) {
 function FieldInput({ field, value, onChange }: FieldInputProps) {
   const id = `field-${field.name}`
 
-     if (field.type === 'media') {
+  if (field.type === 'media') {
     return <MediaPicker field={field} value={value} onChange={onChange} />
   }
 
   if (field.type === 'skills') {
     return <SkillPicker field={field} value={value} onChange={onChange} />
   }
+
   if (field.type === 'checkbox') {
     return (
       <label className="admin-check">
@@ -166,9 +168,23 @@ function FieldInput({ field, value, onChange }: FieldInputProps) {
         {field.label}
       </label>
       {field.type === 'textarea' ? (
-        <textarea id={id} rows={8} className="pf-input" value={text} required={field.required} onChange={(e) => onChange(e.target.value)} />
+        <textarea
+          id={id}
+          rows={8}
+          className="pf-input"
+          value={text}
+          required={field.required}
+          onChange={(e) => onChange(e.target.value)}
+        />
       ) : (
-        <input id={id} type={INPUT_TYPES[field.type]} className="pf-input" value={text} required={field.required} onChange={(e) => onChange(e.target.value)} />
+        <input
+          id={id}
+          type={INPUT_TYPES[field.type]}
+          className="pf-input"
+          value={text}
+          required={field.required}
+          onChange={(e) => onChange(e.target.value)}
+        />
       )}
       {field.help && <p className="pf-field__help">{field.help}</p>}
     </div>
@@ -180,12 +196,13 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
   const list = useResourceList(config)
   const [editing, setEditing] = useState<Item | 'new' | null>(null)
   const [form, setForm] = useState<FormState>({})
+  const confirm = useConfirm()
 
- const refresh = () =>
-  Promise.all([
-    queryClient.invalidateQueries({ queryKey: ['admin', config.key] }),
-    queryClient.invalidateQueries({ queryKey: [config.key] }),
-  ])
+  const refresh = () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['admin', config.key] }),
+      queryClient.invalidateQueries({ queryKey: [config.key] }),
+    ])
 
   const save = useMutation({
     mutationFn: (payload: Payload) =>
@@ -204,10 +221,16 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
   })
 
   const markRead = useMutation({
-  mutationFn: (id: string) =>
-    updateResource(config.endpoint, id, { isRead: true }),
-  onSuccess: refresh,
-})
+    mutationFn: (id: string) =>
+      updateResource(config.endpoint, id, { isRead: true }),
+    onSuccess: refresh,
+  })
+
+  const approve = useMutation({
+    mutationFn: (id: string) =>
+      updateResource(config.endpoint, id, { approved: true }),
+    onSuccess: refresh,
+  })
 
   const open = (target: Item | 'new') => {
     save.reset()
@@ -220,10 +243,15 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
     save.mutate(toPayload(form, config.fields))
   }
 
-  const handleDelete = (item: Item) => {
-    if (window.confirm(`Delete "${config.primary(item)}"? This cannot be undone.`)) {
-      remove.mutate(item.id)
-    }
+  const handleDelete = async (item: Item) => {
+    const ok = await confirm({
+      title: `Delete "${config.primary(item).replace(/^● /, '')}"?`,
+      message: 'This cannot be undone.',
+      confirmLabel: 'Delete',
+      tone: 'danger',
+    })
+
+    if (ok) remove.mutate(item.id)
   }
 
   const items = list.data ?? []
@@ -266,7 +294,7 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
         </form>
       )}
 
-            {remove.isError && (
+      {remove.isError && (
         <p className="pf-error" role="alert">
           {getErrorMessage(remove.error)}
         </p>
@@ -292,7 +320,8 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
                 <p className="admin-row__primary">{config.primary(item)}</p>
                 {config.secondary && <p className="admin-row__secondary">{config.secondary(item)}</p>}
               </div>
-                            <div className="admin-actions">
+
+              <div className="admin-actions">
                 {!config.readOnly && (
                   <button
                     type="button"
@@ -314,10 +343,21 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
                   </button>
                 )}
 
+                {config.canApprove && item.approved !== true && (
+  <button
+    type="button"
+    className="pf-button pf-button--ghost"
+    onClick={() => approve.mutate(item.id)}
+    disabled={approve.isPending}
+  >
+    Approve
+  </button>
+)}
+
                 <button
                   type="button"
                   className="pf-button pf-button--ghost"
-                  onClick={() => handleDelete(item)}
+                  onClick={() => void handleDelete(item)}
                   disabled={remove.isPending}
                 >
                   Delete

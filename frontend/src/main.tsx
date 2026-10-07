@@ -9,6 +9,7 @@ import './styles/shared.css'
 import './styles/admin.css'
 import { App } from './app/App'
 import { AppProviders } from './app/providers/AppProviders'
+import { dismissSplash } from './lib/splash'
 
 const container = document.getElementById('root')
 
@@ -23,3 +24,4 @@ createRoot(container).render(
     </AppProviders>
   </StrictMode>,
 )
+dismissSplash()

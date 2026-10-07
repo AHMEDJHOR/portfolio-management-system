@@ -6,21 +6,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark light" />
     <title>Ahmed Jhor | Portfolio</title>
+
     <script>
       // Resolve the theme before first paint to avoid a flash of the wrong theme.
       // The storage key must match STORAGE_KEY in ThemeProvider.tsx.
       (function () {
-        var theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        var theme = window.matchMedia('(prefers-color-scheme: light)').matches
+          ? 'light'
+          : 'dark';
+
         try {
           var stored = localStorage.getItem('theme');
-          if (stored === 'light' || stored === 'dark') theme = stored;
+          if (stored === 'light' || stored === 'dark') {
+            theme = stored;
+          }
         } catch (e) {}
+
         document.documentElement.dataset.theme = theme;
+
+        try {
+          if (sessionStorage.getItem('splash-seen')) {
+            document.documentElement.classList.add('no-splash');
+          }
+        } catch (e) {}
       })();
     </script>
+
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background: #030712;
+        color: #f8fafc;
+        font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+        transition: opacity 0.6s ease, visibility 0.6s;
+      }
+
+      html[data-theme='light'] #splash {
+        background: #f5f7fa;
+        color: #0f172a;
+      }
+
+      html.no-splash #splash {
+        display: none;
+      }
+
+      #splash.is-leaving {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .splash__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .splash__mark {
+        width: 4rem;
+        height: 4rem;
+        object-fit: contain;
+      }
+
+     .splash__name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: splash-fade 0.7s ease 0.3s forwards;
+}
+
+.splash__bar {
+  width: 8rem;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 2px;
+  opacity: 0;
+  animation: splash-fade 0.4s ease 0.3s forwards;
+}
+
+.splash__bar span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #6366f1, #38bdf8);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: splash-load 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+      @keyframes splash-fade {
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes splash-load {
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #splash {
+          transition: none;
+        }
+
+        .splash__name,
+        .splash__bar {
+          animation: none;
+          opacity: 1;
+        }
+
+        .splash__bar span {
+          animation: none;
+          transform: scaleX(1);
+        }
+      }
+    </style>
+
+    <noscript>
+      <style>
+        #splash {
+          display: none;
+        }
+      </style>
+    </noscript>
   </head>
+
   <body>
+    <div id="splash" role="status">
+      <div class="splash__inner">
+        <img class="splash__mark" src="/logo.png" alt="" />
+
+        <div class="splash__name" aria-hidden="true">
+          Ahmed Jhor
+        </div>
+
+        <div class="splash__bar" aria-hidden="true">
+          <span></span>
+        </div>
+
+        <span
+          style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)"
+        >
+          Loading
+        </span>
+      </div>
+    </div>
+
     <div id="root"></div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -7,11 +7,13 @@ import { SkillsSection } from '../components/sections/SkillsSection'
 import { Reveal } from '../components/ui/Reveal'
 import { About } from './About'
 import { Contact } from './Contact'
+import { StatsStrip } from '../components/sections/StatsStrip'
 
 export function Home() {
   return (
     <>
       <Hero />
+      <StatsStrip />
       <Reveal>
         <About />
       </Reveal>

@@ -5,6 +5,7 @@ import { useMediaList } from '../../hooks/useMedia'
 import { getErrorMessage } from '../../lib/errors'
 import { mediaLabel, mediaUrl } from '../../lib/media'
 import { deleteMedia, uploadMedia, type UploadInput } from '../../services/media'
+import { useConfirm } from '../../components/ui/useConfirm'
 
 const MAX_BYTES = 5 * 1024 * 1024
 
@@ -16,6 +17,7 @@ export function MediaManager() {
   const [altText, setAltText] = useState('')
   const [provider, setProvider] = useState<UploadInput['provider']>('local')
   const [fileError, setFileError] = useState<string | null>(null)
+  const confirm = useConfirm()
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: ['media'] })
 
@@ -51,8 +53,15 @@ export function MediaManager() {
     if (file) upload.mutate({ file, altText, provider })
   }
 
-  const handleDelete = (id: string, label: string) => {
-    if (window.confirm(`Delete "${label}"? This cannot be undone.`)) remove.mutate(id)
+  const handleDelete = async (id: string, label: string) => {
+    const ok = await confirm({
+      title: `Delete "${label}"?`,
+      message: 'This image will be removed from the site.',
+      confirmLabel: 'Delete',
+      tone: 'danger',
+    })
+
+    if (ok) remove.mutate(id)
   }
 
   const items = list.data ?? []
@@ -69,14 +78,27 @@ export function MediaManager() {
           <label htmlFor="media-file" className="pf-field__label">
             Image
           </label>
-          <input id="media-file" ref={inputRef} type="file" accept="image/*" className="pf-input" onChange={handleFile} />
+          <input
+            id="media-file"
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            className="pf-input"
+            onChange={handleFile}
+          />
           <p className="pf-field__help">Images only, up to 5 MB.</p>
         </div>
         <div className="pf-field">
           <label htmlFor="media-alt" className="pf-field__label">
             Alt text
           </label>
-          <input id="media-alt" type="text" className="pf-input" value={altText} onChange={(e) => setAltText(e.target.value)} />
+          <input
+            id="media-alt"
+            type="text"
+            className="pf-input"
+            value={altText}
+            onChange={(e) => setAltText(e.target.value)}
+          />
           <p className="pf-field__help">Describe the image for screen readers.</p>
         </div>
         <div className="pf-field">
@@ -121,7 +143,12 @@ export function MediaManager() {
         <ul className="admin-media">
           {items.map((item) => (
             <li key={item.id} className="admin-media__item">
-              <img className="admin-media__img" src={mediaUrl(item.url)} alt={item.altText ?? ''} loading="lazy" />
+              <img
+                className="admin-media__img"
+                src={mediaUrl(item.url)}
+                alt={item.altText ?? ''}
+                loading="lazy"
+              />
               <p className="admin-row__primary">{mediaLabel(item)}</p>
               <p className="admin-row__secondary">
                 {item.provider === 'LOCAL' ? 'Local' : 'Cloudinary'} · {Math.round(item.size / 1024)} KB
@@ -130,7 +157,7 @@ export function MediaManager() {
                 type="button"
                 className="pf-button pf-button--ghost"
                 disabled={remove.isPending}
-                onClick={() => handleDelete(item.id, mediaLabel(item))}
+                onClick={() => void handleDelete(item.id, mediaLabel(item))}
               >
                 Delete
               </button>

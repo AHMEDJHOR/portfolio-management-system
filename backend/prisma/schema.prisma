@@ -125,6 +125,19 @@ model Certification {
   updatedAt     DateTime @updatedAt
 }
 
+model Comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  blogId    String   @db.Uuid
+  blog      Blog     @relation("BlogComments", fields: [blogId], references: [id], onDelete: Cascade)
+  name      String
+  email     String
+  content   String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([blogId, approved])
+}
+
 model Blog {
   id          String   @id @default(uuid()) @db.Uuid
   title       String
@@ -138,6 +151,8 @@ model Blog {
   updatedAt   DateTime @updatedAt
 
   @@index([slug])
+
+  comments Comment[] @relation("BlogComments")
 }
 
 model ContactMessage {

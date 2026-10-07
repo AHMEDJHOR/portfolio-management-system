@@ -11,6 +11,7 @@ import {
   messagesResource,
   projectsResource,
   skillsResource,
+  commentsResource,
   type ResourceConfig,
 } from '../pages/admin/resources'
 
@@ -89,6 +90,7 @@ const adminRoutes: RouteObject[] = [
               { path: 'blog', element: manage(blogResource) },
               { path: 'messages', element: manage(messagesResource) },
               { path: 'media', element: <MediaManager /> },
+              { path: 'comments', element: manage(commentsResource) },
             ],
           },
         ],

@@ -116,7 +116,29 @@ const en = {
   'notFound.title': 'Page not found',
   'notFound.text': 'The page you are looking for does not exist or has moved.',
   'notFound.home': 'Back to home',
-} as const
+   
+    'stats.aria': 'Key facts',
+  'stats.years': 'Years building software',
+  'stats.projects': 'Projects completed',
+  'stats.skills': 'Technologies',
+
+  'comments.title': 'Comments',
+  'comments.lead': 'Share a thought or a question about this article.',
+  'comments.name': 'Name',
+  'comments.email': 'Email',
+  'comments.comment': 'Comment',
+  'comments.privacy': 'Your email is never shown.',
+  'comments.post': 'Post comment',
+  'comments.posting': 'Posting…',
+  'comments.empty': 'No comments yet. Be the first to share a thought.',
+  'comments.doneTitle': 'Thank you!',
+  'comments.pending': 'Your comment will appear after I review it.',
+  'comments.another': 'Write another comment',
+  'comments.err.name': 'Please enter your name.',
+  'comments.err.email': 'Please enter a valid email address.',
+  'comments.err.comment': 'Please write at least 3 characters.',
+
+  } as const
 
 export type MessageKey = keyof typeof en
 
@@ -237,6 +259,28 @@ const am: Record<MessageKey, string> = {
   'notFound.title': 'ገጹ አልተገኘም',
   'notFound.text': 'የሚፈልጉት ገጽ የለም ወይም ተወስዷል።',
   'notFound.home': 'ወደ መነሻ ተመለስ',
+
+    'stats.aria': 'ዋና ዋና እውነታዎች',
+  'stats.years': 'ሶፍትዌር የገነባሁባቸው ዓመታት',
+  'stats.projects': 'የተጠናቀቁ ፕሮጀክቶች',
+  'stats.skills': 'ቴክኖሎጂዎች',
+
+  'comments.title': 'አስተያየቶች',
+  'comments.lead': 'ስለዚህ ጽሑፍ ሐሳብዎን ወይም ጥያቄዎን ያካፍሉ።',
+  'comments.name': 'ስም',
+  'comments.email': 'ኢሜይል',
+  'comments.comment': 'አስተያየት',
+  'comments.privacy': 'ኢሜይልዎ በፍጹም አይታይም።',
+  'comments.post': 'አስተያየት ላክ',
+  'comments.posting': 'በመላክ ላይ…',
+  'comments.empty': 'እስካሁን አስተያየት የለም። መጀመሪያ ሐሳብዎን ያካፍሉ።',
+  'comments.doneTitle': 'አመሰግናለሁ!',
+  'comments.pending': 'አስተያየትዎ ከተመለከትኩት በኋላ ይታያል።',
+  'comments.another': 'ሌላ አስተያየት ጻፍ',
+  'comments.err.name': 'እባክዎ ስምዎን ያስገቡ።',
+  'comments.err.email': 'እባክዎ ትክክለኛ የኢሜይል አድራሻ ያስገቡ።',
+  'comments.err.comment': 'እባክዎ ቢያንስ 3 ፊደላትን ይጻፉ።',
+
 }
 
 export const messages: Record<Language, Record<MessageKey, string>> = { en, am }

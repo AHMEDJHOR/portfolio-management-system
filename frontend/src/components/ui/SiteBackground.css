@@ -1,0 +1,106 @@
+.site-bg {
+  --glow-strength: 1;
+
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+:root[data-theme='light'] .site-bg {
+  --glow-strength: 0.55;
+}
+
+/* ---- Dotted grid, faded toward the edges ---- */
+
+.site-bg__grid {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 25%, transparent 80%);
+  mask-image: radial-gradient(ellipse 85% 70% at 50% 35%, #000 25%, transparent 80%);
+}
+
+.site-bg__dots {
+  position: absolute;
+  inset: -24px 0;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-text-primary) 16%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+/* ---- Glows: position and strength depend on the section in view ---- */
+
+.site-bg__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(60rem, 90vmax);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: calc(var(--o, 0) * var(--glow-strength));
+  transform: translate(calc(var(--x, 50) * 1vw - 50%), calc(var(--y, 50) * 1vh - 50%));
+  transition:
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 1.2s ease;
+  will-change: transform, opacity;
+}
+
+.site-bg__glow--primary {
+  --x: 75;
+  --y: 20;
+  --o: 0.2;
+  background: radial-gradient(closest-side, var(--color-primary), transparent);
+}
+
+.site-bg__glow--secondary {
+  --x: 95;
+  --y: 75;
+  --o: 0.12;
+  background: radial-gradient(closest-side, var(--color-secondary), transparent);
+}
+
+.site-bg__glow--tertiary {
+  --x: 0;
+  --y: 60;
+  --o: 0;
+  background: radial-gradient(closest-side, var(--color-tertiary), transparent);
+}
+
+/* about: story, indigo on the left */
+.site-bg[data-section='about'] .site-bg__glow--primary { --x: 12; --y: 35; --o: 0.22; }
+.site-bg[data-section='about'] .site-bg__glow--secondary { --x: 92; --y: 80; --o: 0.1; }
+
+/* skills: tools, cyan across the top */
+.site-bg[data-section='skills'] .site-bg__glow--primary { --x: 15; --y: 80; --o: 0.1; }
+.site-bg[data-section='skills'] .site-bg__glow--secondary { --x: 60; --y: 25; --o: 0.2; }
+
+/* projects: work, indigo on the right */
+.site-bg[data-section='projects'] .site-bg__glow--primary { --x: 88; --y: 40; --o: 0.22; }
+.site-bg[data-section='projects'] .site-bg__glow--secondary { --x: 10; --y: 85; --o: 0.1; }
+
+/* experience: growth, emerald appears */
+.site-bg[data-section='experience'] .site-bg__glow--primary { --x: 85; --y: 85; --o: 0.1; }
+.site-bg[data-section='experience'] .site-bg__glow--tertiary { --x: 18; --y: 40; --o: 0.16; }
+
+/* blog: writing, cyan on the right */
+.site-bg[data-section='blog'] .site-bg__glow--secondary { --x: 85; --y: 35; --o: 0.2; }
+.site-bg[data-section='blog'] .site-bg__glow--primary { --x: 12; --y: 75; --o: 0.1; }
+
+/* contact: converge, indigo and emerald meet */
+.site-bg[data-section='contact'] .site-bg__glow--primary { --x: 40; --y: 55; --o: 0.2; }
+.site-bg[data-section='contact'] .site-bg__glow--tertiary { --x: 70; --y: 45; --o: 0.12; }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-bg__glow {
+    transition: none;
+  }
+}
+
+@media (max-width: 40rem) {
+  .site-bg__glow {
+    width: 130vmax;
+  }
+}

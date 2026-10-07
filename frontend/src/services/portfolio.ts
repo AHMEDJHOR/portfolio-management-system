@@ -1,6 +1,6 @@
 import { apiClient, unwrap, unwrapList } from '../lib/api-client'
 import { isRecord } from '../lib/guards'
-import type { BlogPost, ContactInput, Education, Experience, Project, Skill,Profile,Certification,ProjectSkill  } from '../types'
+import type { BlogPost, ContactInput, Education, Experience, Project, Skill,Profile,Certification,ProjectSkill,BlogComment,CommentInput  } from '../types'
 
 const PAGE = { page: 1, limit: 100 }
 
@@ -61,3 +61,10 @@ export const getProfile = (): Promise<Profile> => unwrap<Profile>(apiClient.get(
 
 export const getCertifications = (): Promise<Certification[]> =>
   unwrapList<Certification>(apiClient.get('/certifications'))
+
+export const getComments = (blogId: string): Promise<BlogComment[]> =>
+  unwrapList<BlogComment>(apiClient.get(`/comments/blog/${encodeURIComponent(blogId)}`))
+
+export async function postComment(blogId: string, input: CommentInput): Promise<void> {
+  await apiClient.post(`/comments/blog/${encodeURIComponent(blogId)}`, input)
+}

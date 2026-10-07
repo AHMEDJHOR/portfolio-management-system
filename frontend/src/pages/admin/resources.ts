@@ -26,6 +26,8 @@ export interface ResourceConfig {
   readOnly?: boolean
   /** Shows a "Mark read" button that sends PUT { isRead: true }. */
   canMarkRead?: boolean
+
+  canApprove?: boolean
 }
 const text = (value: unknown): string => (typeof value === 'string' ? value : '')
 
@@ -152,3 +154,22 @@ export const ADMIN_RESOURCES: readonly ResourceConfig[] = [
   blogResource,
   messagesResource,
 ]
+
+const blogTitle = (item: Item): string => {
+  const blog = item.blog
+  return typeof blog === 'object' && blog !== null && 'title' in blog && typeof blog.title === 'string'
+    ? blog.title
+    : ''
+}
+
+export const commentsResource: ResourceConfig = {
+  key: 'comments',
+  title: 'Comments',
+  path: '/admin/comments',
+  endpoint: '/comments',
+  fields: [],
+  readOnly: true,
+  canApprove: true,
+  primary: (item) => `${item.approved === true ? '' : '● '}${text(item.name)} <${text(item.email)}>`,
+  secondary: (item) => `On "${blogTitle(item)}": ${text(item.content)}`,
+}
