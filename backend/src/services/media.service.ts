@@ -3,6 +3,7 @@ import { AppError } from '../utils/AppError.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import cloudinary from '../config/cloudinary.js';
+import { env } from '../config/env.js';
 
 export const uploadToCloudinary = async (
   filePath: string,
@@ -10,6 +11,10 @@ export const uploadToCloudinary = async (
   secureUrl: string;
   publicId: string;
 }> => {
+  if (!env.cloudinaryConfigured) {
+    throw new AppError('Cloudinary is not configured', 503);
+  }
+
   const result = await cloudinary.uploader.upload(filePath, {
     folder: 'portfolio',
     resource_type: 'image',
@@ -107,6 +112,10 @@ export const deleteMedia = async (id: string) => {
   }
 
   if (existingMedia.provider === 'CLOUDINARY' && existingMedia.publicId) {
+    if (!env.cloudinaryConfigured) {
+      throw new AppError('Cloudinary is not configured', 503);
+    }
+
     await cloudinary.uploader.destroy(existingMedia.publicId, {
       resource_type: 'image',
     });

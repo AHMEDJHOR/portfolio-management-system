@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { DataState } from '../components/ui/DataState'
 import { useBlogPost } from '../hooks/usePortfolio'
 import { formatDate, toParagraphs } from '../lib/format'
+import { mediaUrl } from '../lib/media'
 import { Seo } from '../components/Seo'
 import { useI18n } from '../i18n/useI18n'
 import { CommentSection } from '../components/blog/CommentSection'
@@ -39,6 +40,13 @@ export function BlogPostPage() {
                 <h1 className="pf-title">{post.title}</h1>
                 <p className="pf-lead">{post.excerpt}</p>
               </header>
+              {post.thumbnail && (
+  <img
+    src={mediaUrl(post.thumbnail.url)}
+    alt={post.thumbnail.altText ?? post.title}
+    loading="eager"
+  />
+)}
 
               <div className="pf-prose">
                 {toParagraphs(post.content).map((paragraph) => (

@@ -1,6 +1,18 @@
 import { apiClient, unwrap, unwrapList } from '../lib/api-client'
 import { isRecord } from '../lib/guards'
-import type { BlogPost, ContactInput, Education, Experience, Project, Skill,Profile,Certification,ProjectSkill,BlogComment,CommentInput  } from '../types'
+import type {
+  BlogPost,
+  ContactInput,
+  Education,
+  Experience,
+  Project,
+  Skill,
+  Profile,
+  Certification,
+  ProjectSkill,
+  BlogComment,
+  CommentInput,
+} from '../types'
 
 const PAGE = { page: 1, limit: 100 }
 
@@ -26,7 +38,8 @@ function toProject(raw: ApiProject): Project {
   return { ...raw, technologies: skills.map((skill) => skill.name), skills }
 }
 
-export const getSkills = (): Promise<Skill[]> => unwrapList<Skill>(apiClient.get('/skills'))
+export const getSkills = (): Promise<Skill[]> =>
+  unwrapList<Skill>(apiClient.get('/skills'))
 
 export async function getProjects(): Promise<Project[]> {
   const list = await unwrapList<ApiProject>(apiClient.get('/projects', { params: PAGE }))
@@ -48,23 +61,27 @@ export const getEducation = (): Promise<Education[]> =>
 export const getBlogPosts = (): Promise<BlogPost[]> =>
   unwrapList<BlogPost>(apiClient.get('/blogs', { params: PAGE }))
 
-export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  const posts = await getBlogPosts()
-  return posts.find((post) => post.slug === slug) ?? null
-}
+export const getBlogPost = (slug: string): Promise<BlogPost> =>
+  unwrap<BlogPost>(apiClient.get(`/blogs/slug/${encodeURIComponent(slug)}`))
 
 export async function sendContactMessage(input: ContactInput): Promise<void> {
   await apiClient.post('/contact-messages', input)
 }
 
-export const getProfile = (): Promise<Profile> => unwrap<Profile>(apiClient.get('/profile'))
+export const getProfile = (): Promise<Profile> =>
+  unwrap<Profile>(apiClient.get('/profile'))
 
 export const getCertifications = (): Promise<Certification[]> =>
   unwrapList<Certification>(apiClient.get('/certifications'))
 
 export const getComments = (blogId: string): Promise<BlogComment[]> =>
-  unwrapList<BlogComment>(apiClient.get(`/comments/blog/${encodeURIComponent(blogId)}`))
+  unwrapList<BlogComment>(
+    apiClient.get(`/comments/blog/${encodeURIComponent(blogId)}`),
+  )
 
-export async function postComment(blogId: string, input: CommentInput): Promise<void> {
+export async function postComment(
+  blogId: string,
+  input: CommentInput,
+): Promise<void> {
   await apiClient.post(`/comments/blog/${encodeURIComponent(blogId)}`, input)
 }

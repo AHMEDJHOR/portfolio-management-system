@@ -5,8 +5,9 @@ import { useI18n } from '../../i18n/useI18n'
 import { DataState } from '../ui/DataState'
 import { SectionHeading } from './SectionHeading'
 import { ScrambleText } from '../ui/ScrambleText'
+import { mediaUrl } from '../../lib/media'
 
-const LATEST_LIMIT = 3
+const LATEST_LIMIT = 4
 
 export function BlogSection() {
   const { t } = useI18n()
@@ -32,6 +33,15 @@ export function BlogSection() {
           <ul className="pf-grid">
             {posts.map((post) => (
               <li key={post.id} className="pf-card">
+              {post.thumbnail && (
+  <img
+    className="pf-card__image"
+    src={mediaUrl(post.thumbnail.url)}
+    alt={post.thumbnail.altText ?? post.title}
+    loading="lazy"
+  />
+)}
+
                 <time className="pf-card__meta" dateTime={post.createdAt}>
                   {formatDate(post.createdAt)}
                 </time>

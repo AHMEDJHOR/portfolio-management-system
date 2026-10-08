@@ -1,23 +1,43 @@
 import { prisma } from '../config/prisma.js';
 import { AppError } from '../utils/AppError.js';
 
-export const getProjects = async (featured?: boolean) => {
-  return prisma.project.findMany({
-    ...(featured !== undefined && {
-      where: { featured },
-    }),
-    include: {
-      technologies: {
-        include: {
-          skill: true,
+export const getProjects = async (
+  featured?: boolean,
+  page = 1,
+  limit = 20,
+) => {
+  const skip = (page - 1) * limit;
+
+  const [projects, total] = await prisma.$transaction([
+    prisma.project.findMany({
+      ...(featured !== undefined && {
+        where: { featured },
+      }),
+      include: {
+        technologies: {
+          include: {
+            skill: true,
+          },
         },
+        thumbnail: true,
       },
-      thumbnail: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip,
+      take: limit,
+    }),
+    prisma.project.count({
+      ...(featured !== undefined && {
+        where: { featured },
+      }),
+    }),
+  ]);
+
+  return {
+    projects,
+    total,
+  };
 };
 
 export const getProjectBySlug = async (slug: string) => {
@@ -168,9 +188,11 @@ export const updateProject = async (
       where: { id },
       data: {
         ...projectData,
-       ...(thumbnailId !== undefined && {
-  thumbnail: thumbnailId ? { connect: { id: thumbnailId } } : { disconnect: true },
-}),
+        ...(thumbnailId !== undefined && {
+          thumbnail: thumbnailId
+            ? { connect: { id: thumbnailId } }
+            : { disconnect: true },
+        }),
       },
     });
 

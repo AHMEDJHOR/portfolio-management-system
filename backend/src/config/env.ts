@@ -34,6 +34,11 @@ if (!parsedEnv.success) {
   process.exit(1);
 }
 
+const cloudinaryConfigured =
+  Boolean(parsedEnv.data.CLOUDINARY_CLOUD_NAME) &&
+  Boolean(parsedEnv.data.CLOUDINARY_API_KEY) &&
+  Boolean(parsedEnv.data.CLOUDINARY_API_SECRET);
+
 export const env = {
   nodeEnv: parsedEnv.data.NODE_ENV,
   port: parsedEnv.data.PORT,
@@ -45,4 +50,5 @@ export const env = {
   cloudinaryCloudName: parsedEnv.data.CLOUDINARY_CLOUD_NAME,
   cloudinaryApiKey: parsedEnv.data.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: parsedEnv.data.CLOUDINARY_API_SECRET,
+  cloudinaryConfigured,
 } as const;

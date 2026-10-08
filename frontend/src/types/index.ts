@@ -48,6 +48,7 @@ export interface BlogPost {
   content: string
   published: boolean
   createdAt: string
+  thumbnail: Media | null
 }
 
 export interface ContactInput {

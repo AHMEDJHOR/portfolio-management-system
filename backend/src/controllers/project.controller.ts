@@ -10,6 +10,8 @@ import { AppError } from '../utils/AppError.js';
 
 export const getAll = async (req: Request, res: Response) => {
   const featuredParam = req.query.featured;
+  const pageParam = req.query.page;
+  const limitParam = req.query.limit;
 
   let featured: boolean | undefined;
 
@@ -21,11 +23,20 @@ export const getAll = async (req: Request, res: Response) => {
     featured = featuredParam === 'true';
   }
 
-  const projects = await getProjects(featured);
+  const page = Math.max(1, Number(pageParam) || 1);
+  const limit = Math.min(100, Math.max(1, Number(limitParam) || 20));
+
+  const { projects, total } = await getProjects(featured, page, limit);
 
   res.status(200).json({
     success: true,
     data: projects,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
   });
 };
 
