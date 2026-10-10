@@ -14,7 +14,10 @@ export function Blog() {
 
   return (
     <>
-      <Seo title="Blog" />
+      <Seo
+        title="Web Development Blog"
+        description="Read Ahmed Jhor's articles about web development, programming, React, TypeScript, backend engineering, databases, and software projects."
+      />
 
       <section className="pf-page" aria-labelledby="blog-title">
         <div className="pf-container">

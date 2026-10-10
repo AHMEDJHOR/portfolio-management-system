@@ -5,13 +5,19 @@ import { ExperienceSection } from '../components/sections/ExperienceSection'
 import { FeaturedProjects } from '../components/sections/FeaturedProjects'
 import { SkillsSection } from '../components/sections/SkillsSection'
 import { Reveal } from '../components/ui/Reveal'
+import { StatsStrip } from '../components/sections/StatsStrip'
+import { Seo } from '../components/Seo'
 import { About } from './About'
 import { Contact } from './Contact'
-import { StatsStrip } from '../components/sections/StatsStrip'
 
 export function Home() {
   return (
     <>
+      <Seo
+           title="Full-Stack Developer"
+           description="Explore Ahmed Jhor's portfolio, software development projects, and experience building web applications with React, TypeScript, Node.js, and Laravel."
+       />
+
       <Hero />
       <StatsStrip />
       <Reveal>

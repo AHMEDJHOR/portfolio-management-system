@@ -39,7 +39,13 @@ export function ProjectDetail() {
             <>
               <Seo
                 title={project.title}
-                description={truncate(project.description, 155)}
+                description={
+                  truncate(
+                    project.description?.trim() ||
+                      `Explore ${project.title}, a software development project by Ahmed Jhor.`,
+                    155,
+                  )
+                }
               />
 
               <header className="pf-heading pf-heading--article">

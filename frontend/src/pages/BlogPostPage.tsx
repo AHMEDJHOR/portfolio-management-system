@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { DataState } from '../components/ui/DataState'
 import { useBlogPost } from '../hooks/usePortfolio'
-import { formatDate, toParagraphs } from '../lib/format'
+import { formatDate, toParagraphs,truncate  } from '../lib/format'
 import { mediaUrl } from '../lib/media'
 import { Seo } from '../components/Seo'
 import { useI18n } from '../i18n/useI18n'
@@ -30,7 +30,11 @@ export function BlogPostPage() {
             <>
               <Seo
                 title={post.title}
-                description={post.excerpt}
+                description={truncate(
+                  post.excerpt?.trim() ||
+                    `Read ${post.title}, an article by Ahmed Jhor about web development and software engineering.`,
+                  155,
+                )}
               />
 
               <header className="pf-heading pf-heading--article">

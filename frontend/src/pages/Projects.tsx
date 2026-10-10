@@ -12,7 +12,11 @@ export function Projects() {
 
   return (
     <>
-      <Seo title="Projects" />
+       <Seo
+        title="Software Projects"
+        description="Explore Ahmed Jhor's software development projects, including web applications built with React, TypeScript, Node.js, Laravel, and databases."
+      />
+
 
       <section className="pf-page" aria-labelledby="projects-title">
         <div className="pf-container">

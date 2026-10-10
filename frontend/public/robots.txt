@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-management-system-flame.vercel.app/sitemap.xml
