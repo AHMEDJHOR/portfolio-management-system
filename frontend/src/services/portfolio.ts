@@ -68,8 +68,8 @@ export async function sendContactMessage(input: ContactInput): Promise<void> {
   await apiClient.post('/contact-messages', input)
 }
 
-export const getProfile = (): Promise<Profile> =>
-  unwrap<Profile>(apiClient.get('/profile'))
+export const getProfile = (): Promise<Profile | null> =>
+  unwrap<Profile | null>(apiClient.get('/profile'))
 
 export const getCertifications = (): Promise<Certification[]> =>
   unwrapList<Certification>(apiClient.get('/certifications'))

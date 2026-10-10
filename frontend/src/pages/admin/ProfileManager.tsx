@@ -47,6 +47,21 @@ const toForm = (p: Profile): FormState => ({
   resumeUrl: p.resumeUrl ?? '',
 })
 
+const EMPTY_PROFILE: Profile = {
+  id: 'new',
+  fullName: '',
+  title: '',
+  bio: '',
+  location: null,
+  email: '',
+  phone: null,
+  githubUrl: null,
+  linkedinUrl: null,
+  telegramUrl: null,
+  resumeUrl: null,
+  profileImage: null,
+}
+
 function ProfileForm({ profile }: { profile: Profile }) {
   const queryClient = useQueryClient()
   const media = useMediaList()
@@ -146,14 +161,18 @@ export function ProfileManager() {
       <header className="admin-header">
         <h1 className="admin-title">Profile</h1>
       </header>
+
       <DataState
         isPending={query.isPending}
         error={query.error}
-        isEmpty={!query.data}
-        emptyMessage="No profile found."
+        isEmpty={false}
+        emptyMessage=""
         onRetry={() => void query.refetch()}
       >
-        {query.data && <ProfileForm key={query.data.id} profile={query.data} />}
+        <ProfileForm
+          key="profile"
+          profile={query.data ?? EMPTY_PROFILE}
+        />
       </DataState>
     </div>
   )
